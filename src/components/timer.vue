@@ -1,36 +1,33 @@
 <script>
-function timer(time) {
-  if (timer.counter == undefined) {
-    timer.difference = +new Date() + time - +new Date()
-    timer.counter = 0
-  }
-  timer.counter++
-  let remaining = "Time's up!"
-  if (timer.difference > 0) {
-    const parts = {
-      days: Math.floor(timer.difference / (1000 * 60 * 60 * 24)),
-      hours: Math.floor((timer.difference / (1000 * 60 * 60)) % 24),
-      minutes: Math.floor((timer.difference / (1000 * 60)) % 60),
-      seconds: Math.floor((timer.difference / 1000) % 60)
-    }
-
-    remaining = Object.keys(parts)
-      .map((part) => {
-        return `${parts[part]} ${part}`
-      })
-      .join(' ')
-  }
-  return remaining
-}
-
 export default {
-  computed: {
-    remaining() {
-      return timer(60000)
+  data() {
+    return {
+      time: 600,
+      timeNumber: null,
+      timeString: null,
+      timerId: null
+    }
+  },
+  methods: {
+    startTimer() {
+      this.timeNumber = this.time
+      //this.timeString = this.timeNumber + ' Seconds'
+      this.timeString = parseInt(this.timeNumber / 60) + ' Minutes'
+      this.timerId = setInterval(this.updateTime, 1000) // Start the timer
+    },
+    updateTime() {
+      if (this.timeNumber > 0) {
+        this.timeNumber--
+        //this.timeString.seconds = this.timeNumber + ' Seconds'
+        this.timeString = parseInt(this.timeNumber / 60) + ' Minutes'
+      } else {
+        clearInterval(this.timerId) // Stop the timer when remaining reaches 0
+      }
     }
   }
 }
 </script>
 <template>
-  <h1>{{ remaining }}</h1>
+  <h1>{{ timeString }}</h1>
+  <button @click="startTimer">Start Timer</button>
 </template>

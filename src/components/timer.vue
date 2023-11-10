@@ -10,13 +10,15 @@ export default {
       timeRemainingHours: null,
       timeRemainingString: '00:00',
       timerId: null,
-      currentState: null,
-      counter: 0
+      currentState: 'Ready!',
+      counter: 0,
+      active: true
     }
   },
   methods: {
     startTimer(givenState) {
       clearInterval(this.timerId)
+      this.active = false
       if (givenState == 'focus') {
         this.time = 1500
         this.currentState = 'Focus'
@@ -104,19 +106,30 @@ export default {
 </script>
 <template>
   <div class="text-center container">
-    <h1>{{ currentState }}</h1>
+    <h4>{{ currentState }}</h4>
     <h1>{{ timeRemainingString }}</h1>
     <div
-      class="progress"
+      class="progress mx-auto"
       role="progressbar"
-      aria-label="Example 20px high"
-      aria-valuenow="25"
+      aria-label="Timer Progress"
+      :aria-valuenow="time - timeNumber"
       aria-valuemin="0"
-      aria-valuemax="100"
-      style="height: 20px; width: 200px"
+      :aria-valuemax="time"
+      style="height: 20px; width: 25%"
     >
-      <div class="progress-bar" style="width: 25%"></div>
+      <div
+        class="progress-bar"
+        :style="{ width: ((time - timeNumber) / time) * 100 + '%' }"
+        style="background-color: black"
+      ></div>
     </div>
-    <button @click="startTimer('focus')" type="button" class="btn btn-dark">Study</button>
+    <button
+      @click="startTimer('focus')"
+      type="button"
+      class="btn btn-dark"
+      :class="{ disabled: !active }"
+    >
+      Study!
+    </button>
   </div>
 </template>

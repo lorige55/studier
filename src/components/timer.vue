@@ -9,13 +9,24 @@ export default {
       timeRemainingMinutes: null,
       timeRemainingHours: null,
       timeRemainingString: '00:00',
-      timerId: null
+      timerId: null,
+      currentState: null,
+      counter: 0
     }
   },
   methods: {
-    startTimer(setTime) {
+    startTimer(givenState) {
       clearInterval(this.timerId)
-      this.time = setTime
+      if (givenState == 'focus') {
+        this.time = 1500
+        this.currentState = 'Focus'
+      } else if (givenState == 'shortBreak') {
+        this.time = 300
+        this.currentState = 'Take a short Break'
+      } else if (givenState == 'longBreak') {
+        this.time = 900
+        this.currentState = 'Take a long Break'
+      }
       this.timeNumber = this.time
 
       this.timeRemainingHours = parseInt(this.timeNumber / 3600)
@@ -62,6 +73,22 @@ export default {
         }
       } else {
         clearInterval(this.timerId) // Stop the timer when remaining reaches 0
+        this.counter++
+        if (this.counter == 1 || this.counter == 3 || this.counter == 5 || this.counter == 7) {
+          this.startTimer('shortBreak')
+        } else if (
+          this.counter == 2 ||
+          this.counter == 4 ||
+          this.counter == 6 ||
+          this.counter == 8
+        ) {
+          this.startTimer('focus')
+        } else if (this.counter == 9) {
+          this.startTimer('longBreak')
+        } else if (this.counter == 10) {
+          this.counter = 0
+          this.startTimer('focus')
+        }
       }
     },
     formatNumber(number) {
@@ -76,39 +103,20 @@ export default {
 }
 </script>
 <template>
-  <div class="text-center">
+  <div class="text-center container">
+    <h1>{{ currentState }}</h1>
     <h1>{{ timeRemainingString }}</h1>
-
-    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-      <input
-        @click="startTimer(900)"
-        type="radio"
-        class="btn-check"
-        name="btnradio"
-        id="Long Break"
-        autocomplete="off"
-      />
-      <label class="btn btn-outline-dark" for="Long Break">Long Break</label>
-
-      <input
-        @click="startTimer(1500)"
-        type="radio"
-        class="btn-check"
-        name="btnradio"
-        id="Focus"
-        autocomplete="off"
-      />
-      <label class="btn btn-outline-dark" for="Focus">Focus</label>
-
-      <input
-        @click="startTimer(300)"
-        type="radio"
-        class="btn-check"
-        name="btnradio"
-        id="Short Break"
-        autocomplete="off"
-      />
-      <label class="btn btn-outline-dark" for="Short Break">Short Break</label>
+    <div
+      class="progress"
+      role="progressbar"
+      aria-label="Example 20px high"
+      aria-valuenow="25"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      style="height: 20px; width: 200px"
+    >
+      <div class="progress-bar" style="width: 25%"></div>
     </div>
+    <button @click="startTimer('focus')" type="button" class="btn btn-dark">Study</button>
   </div>
 </template>

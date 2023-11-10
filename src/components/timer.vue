@@ -13,32 +13,34 @@ export default {
       currentState: 'Ready!',
       counter: 0,
       active: true,
-      focusTime: 1500,
-      shortBreakTime: 300,
-      longBreakTime: 900
+      xTime: [1500, 300, 900]
     }
   },
   methods: {
     startTimer(givenState) {
-      clearInterval(this.timerId)
-      this.active = false
+      this.initialize()
+      clearInterval(this.timerId) //clear latest Timer
+      this.active = false //set Start Button to active
+      //set Time according to givenState
       if (givenState == 'focus') {
-        this.time = this.focusTime //1500
+        this.time = this.xTime[0] //1500
         this.currentState = 'Focus'
       } else if (givenState == 'shortBreak') {
-        this.time = this.shortBreakTime //300
+        this.time = this.xTime[1] //300
         this.currentState = 'Take a short Break'
       } else if (givenState == 'longBreak') {
-        this.time = this.longBreakTime //900
+        this.time = this.xTime[2] //900
         this.currentState = 'Take a long Break'
       }
-      this.timeNumber = this.time
+      this.timeNumber = this.time //inizialize timeNumber
 
+      //calculate remaining Time
       this.timeRemainingHours = parseInt(this.timeNumber / 3600)
       this.timeRemainingMinutes = parseInt(this.timeNumber / 60) - this.timeRemainingHours * 60
       this.timeRemainingSeconds =
         this.timeNumber - this.timeRemainingMinutes * 60 - this.timeRemainingHours * 3600
 
+      //initialized time remaining string
       if (this.timeRemainingHours !== 0) {
         this.timeRemainingString =
           this.formatNumber(this.timeRemainingHours) +
@@ -56,6 +58,7 @@ export default {
       this.timerId = setInterval(this.updateTime, 1000) // Start the timer
     },
     updateTime() {
+      //count
       if (this.timeNumber > 0) {
         this.timeNumber--
         this.timeRemainingHours = parseInt(this.timeNumber / 3600)
@@ -79,6 +82,7 @@ export default {
       } else {
         clearInterval(this.timerId) // Stop the timer when remaining reaches 0
         this.counter++
+        //start next timer
         if (this.counter == 1 || this.counter == 3 || this.counter == 5 || this.counter == 7) {
           this.startTimer('shortBreak')
           this.$refs.transitionSound.play()
@@ -107,6 +111,35 @@ export default {
       } else {
         return number
       }
+    },
+    setNewTimeValues() {
+      this.xTime[0] = document.getElementById('inputFocusTime').value * 60
+      this.xTime[1] = document.getElementById('inputShortBreakTime').value * 60
+      this.xTime[2] = document.getElementById('inputLongBreakTime').value * 60
+      localStorage.setItem('xTime0', this.xTime[0])
+      localStorage.setItem('xTime1', this.xTime[1])
+      localStorage.setItem('xTime2', this.xTime[2])
+    },
+    initialize() {
+      //use saved values if they exist
+      if (localStorage.getItem('xTime0') !== undefined) {
+        this.xTime[0] = localStorage.getItem('xTime0')
+        this.xTime[1] = localStorage.getItem('xTime1')
+        this.xTime[2] = localStorage.getItem('xTime2')
+      }
+    },
+    reset() {
+      clearInterval(this.timerId) //clear latest Timer
+      this.time = null
+      this.timeNumber = null
+      this.timeRemainingSeconds = null
+      this.timeRemainingMinutes = null
+      this.timeRemainingHours = null
+      this.timeRemainingString = '00:00'
+      this.timerId = null
+      this.currentState = 'Ready!'
+      this.counter = 0
+      this.active = true
     }
   }
 }
@@ -132,7 +165,7 @@ export default {
       ></div>
     </div>
     <button
-      id="startTi"
+      id="startTimer"
       @click="startTimer('focus')"
       type="button"
       class="btn btn-dark"
@@ -146,12 +179,18 @@ export default {
     <source src="../assets/transition.mp3" type="audio/mpeg" />
   </audio>
 
-  <!-- Settings-->
-  <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#settings">
+  <!-- Settings Button-->
+  <button
+    @click="reset()"
+    type="button"
+    class="btn btn-dark"
+    data-bs-toggle="modal"
+    data-bs-target="#settings"
+  >
     Settings
   </button>
 
-  <!-- Popup -->
+  <!-- Settings Popup -->
   <div
     class="modal fade"
     id="settings"
@@ -172,21 +211,51 @@ export default {
         </div>
         <div class="modal-body">
           <form>
-            <div class="input-group mb-3">
+            <div class="mb-3">
               <label for="inputFocusTime" class="form-label">Focus Time</label>
               <input
                 type="number"
                 class="form-control"
                 id="inputFocusTime"
-                aria-describedby="focusTime"
+                aria-describedby="focusTimeHelp"
+                :value="xTime[0] / 60"
               />
-              <span class="input-group-text" id="basic-addon2">Minutes</span>
+              <div id="focusTimeHelp" class="form-text">Recommended Time: 25 Minutes</div>
+            </div>
+            <div class="mb-3">
+              <label for="inputShortBreakTime" class="form-label">Short Break Time</label>
+              <input
+                type="number"
+                class="form-control"
+                id="inputShortBreakTime"
+                aria-describedby="shortBreakTimeHelp"
+                :value="xTime[1] / 60"
+              />
+              <div id="shortBreakTimeHelp" class="form-text">Recommended Time: 5 Minutes</div>
+            </div>
+            <div class="mb-3">
+              <label for="inputLongBreakTime" class="form-label">Long Break Time</label>
+              <input
+                type="number"
+                class="form-control"
+                id="inputLongBreakTime"
+                aria-describedby="inputLongBreakTimeHelp"
+                :value="xTime[2] / 60"
+              />
+              <div id="longBreakTimeHelp" class="form-text">Recommended Time: 15 Minutes</div>
             </div>
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
-          <button type="button" class="btn btn-dark">Save changes</button>
+          <button
+            type="button"
+            @click="setNewTimeValues()"
+            data-bs-dismiss="modal"
+            class="btn btn-dark"
+          >
+            Save changes
+          </button>
         </div>
       </div>
     </div>

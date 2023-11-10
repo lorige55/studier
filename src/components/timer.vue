@@ -21,13 +21,13 @@ export default {
       clearInterval(this.timerId)
       this.active = false
       if (givenState == 'focus') {
-        this.time = 1500
+        this.time = 1500 //1500
         this.currentState = 'Focus'
       } else if (givenState == 'shortBreak') {
-        this.time = 300
+        this.time = 300 //300
         this.currentState = 'Take a short Break'
       } else if (givenState == 'longBreak') {
-        this.time = 900
+        this.time = 900 //900
         this.currentState = 'Take a long Break'
       }
       this.timeNumber = this.time

@@ -1,6 +1,5 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script>
-const notificationSound = new Audio('../assets/notificationmp3')
 export default {
   data() {
     return {
@@ -13,7 +12,10 @@ export default {
       timerId: null,
       currentState: 'Ready!',
       counter: 0,
-      active: true
+      active: true,
+      focusTime: 1500,
+      shortBreakTime: 300,
+      longBreakTime: 900
     }
   },
   methods: {
@@ -21,13 +23,13 @@ export default {
       clearInterval(this.timerId)
       this.active = false
       if (givenState == 'focus') {
-        this.time = 1500 //1500
+        this.time = this.focusTime //1500
         this.currentState = 'Focus'
       } else if (givenState == 'shortBreak') {
-        this.time = 300 //300
+        this.time = this.shortBreakTime //300
         this.currentState = 'Take a short Break'
       } else if (givenState == 'longBreak') {
-        this.time = 900 //900
+        this.time = this.longBreakTime //900
         this.currentState = 'Take a long Break'
       }
       this.timeNumber = this.time
@@ -79,7 +81,7 @@ export default {
         this.counter++
         if (this.counter == 1 || this.counter == 3 || this.counter == 5 || this.counter == 7) {
           this.startTimer('shortBreak')
-          notificationSound.play()
+          this.$refs.transitionSound.play()
         } else if (
           this.counter == 2 ||
           this.counter == 4 ||
@@ -87,14 +89,14 @@ export default {
           this.counter == 8
         ) {
           this.startTimer('focus')
-          notificationSound.play()
+          this.$refs.transitionSound.play()
         } else if (this.counter == 9) {
           this.startTimer('longBreak')
-          notificationSound.play()
+          this.$refs.transitionSound.play()
         } else if (this.counter == 10) {
           this.counter = 0
           this.startTimer('focus')
-          notificationSound.play()
+          this.$refs.transitionSound.play()
         }
       }
     },
@@ -110,6 +112,7 @@ export default {
 }
 </script>
 <template>
+  <!--Main UI-->
   <div class="text-center container">
     <h4>{{ currentState }}</h4>
     <h1>{{ timeRemainingString }}</h1>
@@ -129,6 +132,7 @@ export default {
       ></div>
     </div>
     <button
+      id="startTi"
       @click="startTimer('focus')"
       type="button"
       class="btn btn-dark"
@@ -136,5 +140,55 @@ export default {
     >
       Study!
     </button>
+  </div>
+  <!--Audio Player-->
+  <audio ref="transitionSound" style="display: none" controls>
+    <source src="../assets/transition.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- Settings-->
+  <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#settings">
+    Settings
+  </button>
+
+  <!-- Popup -->
+  <div
+    class="modal fade"
+    id="settings"
+    tabindex="-1"
+    aria-labelledby="settingsLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="settingsLabel">Settings</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="input-group mb-3">
+              <label for="inputFocusTime" class="form-label">Focus Time</label>
+              <input
+                type="number"
+                class="form-control"
+                id="inputFocusTime"
+                aria-describedby="focusTime"
+              />
+              <span class="input-group-text" id="basic-addon2">Minutes</span>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
+          <button type="button" class="btn btn-dark">Save changes</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>

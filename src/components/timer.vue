@@ -1,5 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <script>
+const notificationSound = new Audio('../assets/notificationmp3')
 export default {
   data() {
     return {
@@ -78,6 +79,7 @@ export default {
         this.counter++
         if (this.counter == 1 || this.counter == 3 || this.counter == 5 || this.counter == 7) {
           this.startTimer('shortBreak')
+          notificationSound.play()
         } else if (
           this.counter == 2 ||
           this.counter == 4 ||
@@ -85,11 +87,14 @@ export default {
           this.counter == 8
         ) {
           this.startTimer('focus')
+          notificationSound.play()
         } else if (this.counter == 9) {
           this.startTimer('longBreak')
+          notificationSound.play()
         } else if (this.counter == 10) {
           this.counter = 0
           this.startTimer('focus')
+          notificationSound.play()
         }
       }
     },

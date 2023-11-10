@@ -13,7 +13,8 @@ export default {
       currentState: 'Ready!',
       counter: 0,
       active: true,
-      xTime: [1500, 300, 900]
+      xTime: [1500, 300, 900],
+      key: 0
     }
   },
   methods: {
@@ -130,16 +131,17 @@ export default {
     },
     reset() {
       clearInterval(this.timerId) //clear latest Timer
-      this.time = null
-      this.timeNumber = null
-      this.timeRemainingSeconds = null
-      this.timeRemainingMinutes = null
-      this.timeRemainingHours = null
+      this.time = 0
+      this.timeNumber = 0
+      this.timeRemainingSeconds = 0
+      this.timeRemainingMinutes = 0
+      this.timeRemainingHours = 0
       this.timeRemainingString = '00:00'
       this.timerId = null
       this.currentState = 'Ready!'
       this.counter = 0
       this.active = true
+      this.key += 1
     }
   }
 }
@@ -149,20 +151,22 @@ export default {
   <div class="text-center container">
     <h4>{{ currentState }}</h4>
     <h1>{{ timeRemainingString }}</h1>
-    <div
-      class="progress mx-auto"
-      role="progressbar"
-      aria-label="Timer Progress"
-      :aria-valuenow="time - timeNumber"
-      aria-valuemin="0"
-      :aria-valuemax="time"
-      style="height: 20px; width: 25%"
-    >
+    <div :key="key">
       <div
-        class="progress-bar"
-        :style="{ width: ((time - timeNumber) / time) * 100 + '%' }"
-        style="background-color: black"
-      ></div>
+        class="progress mx-auto"
+        role="progressbar"
+        aria-label="Timer Progress"
+        :aria-valuenow="time - timeNumber"
+        aria-valuemin="0"
+        :aria-valuemax="time"
+        style="height: 20px; width: 25%"
+      >
+        <div
+          class="progress-bar"
+          :style="{ width: ((time - timeNumber) / time) * 100 + '%' }"
+          style="background-color: black"
+        ></div>
+      </div>
     </div>
     <button
       id="startTimer"

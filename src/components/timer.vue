@@ -1,4 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
+<!-- eslint-disable no-undef -->
+<!-- eslint-disable vue/multi-word-component-names -->
 <script>
 export default {
   data() {
@@ -15,7 +17,8 @@ export default {
       active: true,
       xTime: [1500, 300, 900],
       key: 0,
-      errorMessage: ''
+      errorMessage: '',
+      todoList: [{ message: 'This is a Task' }]
     }
   },
   methods: {
@@ -121,8 +124,8 @@ export default {
         document.getElementById('inputLongBreakTime').value
       ]
 
-      var settings = document.getElementById('settings')
-      var modalSettings = bootstrap.Modal.getInstance(settings)
+      let settings = document.getElementById('settings')
+      let modalSettings = bootstrap.Modal.getInstance(settings)
 
       if (newTime[0] >= 1 && newTime[1] >= 1 && newTime[2] >= 1) {
         this.xTime[0] = newTime[0] * 60
@@ -133,7 +136,7 @@ export default {
         localStorage.setItem('xTime2', this.xTime[2])
         modalSettings.hide()
       } else {
-        var modalError = new bootstrap.Modal(document.getElementById('error'))
+        let modalError = new bootstrap.Modal(document.getElementById('error'))
         this.errorMessage = 'Really? You think you can trick my Software that easy? Try harder!'
         modalSettings.hide()
         modalError.show()
@@ -166,6 +169,7 @@ export default {
 }
 </script>
 <template>
+  <title>Studier {{ timeRemainingString }}</title>
   <!--Main UI-->
   <div class="text-center container">
     <h4>{{ currentState }}</h4>
@@ -197,16 +201,11 @@ export default {
       Study!
     </button>
   </div>
-  <!--Audio Player-->
-  <audio ref="transitionSound" style="display: none" controls>
-    <source src="../assets/transition.mp3" type="audio/mpeg" />
-  </audio>
-
   <!-- Settings Button-->
   <button
     @click="reset()"
     type="button"
-    class="btn btn-dark position-absolute top-0 end-0"
+    class="btn btn-dark position-absolute top-0 end-0 uiButton"
     data-bs-toggle="modal"
     data-bs-target="#settings"
   >
@@ -278,6 +277,7 @@ export default {
       </div>
     </div>
   </div>
+
   <!-- Error Popup -->
   <div class="modal fade" id="error" tabindex="-1" aria-labelledby="errorLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -300,4 +300,15 @@ export default {
       </div>
     </div>
   </div>
+  <!-- ToDo List -->
+  <div class="card">
+    <div v-for="item in todoList" :key="item" class="card-body">
+      {{ item.message }}
+    </div>
+  </div>
+
+  <!--Audio Player-->
+  <audio ref="transitionSound" style="display: none" controls>
+    <source src="../assets/transition.mp3" type="audio/mpeg" />
+  </audio>
 </template>

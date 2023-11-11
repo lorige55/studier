@@ -14,7 +14,8 @@ export default {
       counter: 0,
       active: true,
       xTime: [1500, 300, 900],
-      key: 0
+      key: 0,
+      errorMessage: ''
     }
   },
   methods: {
@@ -121,7 +122,7 @@ export default {
       ]
 
       var settings = document.getElementById('settings')
-      var modal = bootstrap.Modal.getInstance(settings)
+      var modalSettings = bootstrap.Modal.getInstance(settings)
 
       if (newTime[0] >= 1 && newTime[1] >= 1 && newTime[2] >= 1) {
         this.xTime[0] = newTime[0] * 60
@@ -130,8 +131,12 @@ export default {
         localStorage.setItem('xTime0', this.xTime[0])
         localStorage.setItem('xTime1', this.xTime[1])
         localStorage.setItem('xTime2', this.xTime[2])
-        modal.hide()
+        modalSettings.hide()
       } else {
+        var modalError = new bootstrap.Modal(document.getElementById('error'))
+        this.errorMessage = 'Really? You think you can trick my Software that easy? Try harder!'
+        modalSettings.hide()
+        modalError.show()
         console.error('You cant set a Time below 1 Minute')
       }
     },
@@ -201,11 +206,11 @@ export default {
   <button
     @click="reset()"
     type="button"
-    class="btn btn-dark"
+    class="btn btn-dark position-absolute top-0 end-0"
     data-bs-toggle="modal"
     data-bs-target="#settings"
   >
-    Settings
+    <i class="bi bi-gear-fill"></i>
   </button>
 
   <!-- Settings Popup -->
@@ -269,6 +274,28 @@ export default {
           <button type="button" @click="setNewTimeValues()" class="btn btn-dark">
             Save changes
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Error Popup -->
+  <div class="modal fade" id="error" tabindex="-1" aria-labelledby="errorLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="errorLabel">Error</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>{{ errorMessage }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" data-bs-dismiss="modal" class="btn btn-danger">Dismiss</button>
         </div>
       </div>
     </div>

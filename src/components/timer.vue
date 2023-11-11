@@ -114,12 +114,26 @@ export default {
       }
     },
     setNewTimeValues() {
-      this.xTime[0] = document.getElementById('inputFocusTime').value * 60
-      this.xTime[1] = document.getElementById('inputShortBreakTime').value * 60
-      this.xTime[2] = document.getElementById('inputLongBreakTime').value * 60
-      localStorage.setItem('xTime0', this.xTime[0])
-      localStorage.setItem('xTime1', this.xTime[1])
-      localStorage.setItem('xTime2', this.xTime[2])
+      let newTime = [
+        document.getElementById('inputFocusTime').value,
+        document.getElementById('inputShortBreakTime').value,
+        document.getElementById('inputLongBreakTime').value
+      ]
+
+      var settings = document.getElementById('settings')
+      var modal = bootstrap.Modal.getInstance(settings)
+
+      if (newTime[0] >= 1 && newTime[1] >= 1 && newTime[2] >= 1) {
+        this.xTime[0] = newTime[0] * 60
+        this.xTime[1] = newTime[1] * 60
+        this.xTime[2] = newTime[2] * 60
+        localStorage.setItem('xTime0', this.xTime[0])
+        localStorage.setItem('xTime1', this.xTime[1])
+        localStorage.setItem('xTime2', this.xTime[2])
+        modal.hide()
+      } else {
+        console.error('You cant set a Time below 1 Minute')
+      }
     },
     initialize() {
       //use saved values if they exist
@@ -219,7 +233,6 @@ export default {
               <label for="inputFocusTime" class="form-label">Focus Time</label>
               <input
                 type="number"
-                min="1"
                 class="form-control"
                 id="inputFocusTime"
                 aria-describedby="focusTimeHelp"
@@ -231,7 +244,6 @@ export default {
               <label for="inputShortBreakTime" class="form-label">Short Break Time</label>
               <input
                 type="number"
-                min="1"
                 class="form-control"
                 id="inputShortBreakTime"
                 aria-describedby="shortBreakTimeHelp"
@@ -243,7 +255,6 @@ export default {
               <label for="inputLongBreakTime" class="form-label">Long Break Time</label>
               <input
                 type="number"
-                min="1"
                 class="form-control"
                 id="inputLongBreakTime"
                 aria-describedby="inputLongBreakTimeHelp"
@@ -255,12 +266,7 @@ export default {
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
-          <button
-            type="button"
-            @click="setNewTimeValues()"
-            data-bs-dismiss="modal"
-            class="btn btn-dark"
-          >
+          <button type="button" @click="setNewTimeValues()" class="btn btn-dark">
             Save changes
           </button>
         </div>

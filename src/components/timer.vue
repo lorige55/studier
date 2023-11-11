@@ -219,6 +219,7 @@ export default {
               <label for="inputFocusTime" class="form-label">Focus Time</label>
               <input
                 type="number"
+                min="1"
                 class="form-control"
                 id="inputFocusTime"
                 aria-describedby="focusTimeHelp"
@@ -230,6 +231,7 @@ export default {
               <label for="inputShortBreakTime" class="form-label">Short Break Time</label>
               <input
                 type="number"
+                min="1"
                 class="form-control"
                 id="inputShortBreakTime"
                 aria-describedby="shortBreakTimeHelp"
@@ -241,6 +243,7 @@ export default {
               <label for="inputLongBreakTime" class="form-label">Long Break Time</label>
               <input
                 type="number"
+                min="1"
                 class="form-control"
                 id="inputLongBreakTime"
                 aria-describedby="inputLongBreakTimeHelp"

@@ -18,7 +18,7 @@ export default {
       xTime: [1500, 300, 900],
       key: 0,
       errorMessage: '',
-      todoList: [{ message: 'This is a Task' }]
+      todoList: []
     }
   },
   methods: {
@@ -164,43 +164,92 @@ export default {
       this.counter = 0
       this.active = true
       this.key += 1
+    },
+    pushNewTask() {
+      let newTask = { message: document.getElementById('taskInput').value }
+      this.todoList.push(newTask)
     }
   }
 }
 </script>
 <template>
   <title>Studier {{ timeRemainingString }}</title>
-  <!--Main UI-->
-  <div class="text-center container">
-    <h4>{{ currentState }}</h4>
-    <h1>{{ timeRemainingString }}</h1>
-    <div :key="key">
-      <div
-        class="progress mx-auto"
-        role="progressbar"
-        aria-label="Timer Progress"
-        :aria-valuenow="time - timeNumber"
-        aria-valuemin="0"
-        :aria-valuemax="time"
-        style="height: 20px; width: 25%"
-      >
+  <div class="position-absolute top-50 start-50 translate-middle">
+    <!--Main UI-->
+    <div class="text-center container">
+      <h4>{{ currentState }}</h4>
+      <h1>{{ timeRemainingString }}</h1>
+      <div :key="key">
         <div
-          class="progress-bar"
-          :style="{ width: ((time - timeNumber) / time) * 100 + '%' }"
-          style="background-color: black"
-        ></div>
+          class="progress mx-auto"
+          role="progressbar"
+          aria-label="Timer Progress"
+          :aria-valuenow="time - timeNumber"
+          aria-valuemin="0"
+          :aria-valuemax="time"
+          style="height: 20px; width: 200px"
+        >
+          <div
+            class="progress-bar"
+            :style="{ width: ((time - timeNumber) / time) * 100 + '%' }"
+            style="background-color: black"
+          ></div>
+        </div>
+      </div>
+      <button
+        id="startTimer"
+        @click="startTimer('focus')"
+        type="button"
+        class="btn btn-dark"
+        :class="{ disabled: !active }"
+      >
+        Study!
+      </button>
+    </div>
+
+    <!-- Error Popup -->
+    <div
+      class="modal fade"
+      id="error"
+      tabindex="-1"
+      aria-labelledby="errorLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="errorLabel">Error</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>{{ errorMessage }}</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" data-bs-dismiss="modal" class="btn btn-danger">Dismiss</button>
+          </div>
+        </div>
       </div>
     </div>
-    <button
-      id="startTimer"
-      @click="startTimer('focus')"
-      type="button"
-      class="btn btn-dark"
-      :class="{ disabled: !active }"
-    >
-      Study!
-    </button>
+    <!-- ToDo List -->
+    <div class="card">
+      <div class="card-body">
+        <input value="What do you want to do?" id="taskInput" type="text" />
+        <button type="button" @click="pushNewTask">Set</button>
+      </div>
+    </div>
+
+    <div class="card" v-for="item in todoList" :key="item">
+      <div class="card-body">
+        {{ item.message }}
+      </div>
+    </div>
   </div>
+
   <!-- Settings Button-->
   <button
     @click="reset()"
@@ -278,37 +327,8 @@ export default {
     </div>
   </div>
 
-  <!-- Error Popup -->
-  <div class="modal fade" id="error" tabindex="-1" aria-labelledby="errorLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="errorLabel">Error</h1>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
-        </div>
-        <div class="modal-body">
-          <p>{{ errorMessage }}</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" data-bs-dismiss="modal" class="btn btn-danger">Dismiss</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- ToDo List -->
-  <div class="card">
-    <div v-for="item in todoList" :key="item" class="card-body">
-      {{ item.message }}
-    </div>
-  </div>
-
   <!--Audio Player-->
   <audio ref="transitionSound" style="display: none" controls>
-    <source src="../assets/transition.mp3" type="audio/mpeg" />
+    <source src="/src/assets/transition.mp3" type="audio/mpeg" />
   </audio>
 </template>

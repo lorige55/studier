@@ -24,28 +24,29 @@ export default {
   methods: {
     startTimer(givenState) {
       this.initialize()
-      clearInterval(this.timerId) //clear latest Timer
-      this.active = false //set Start Button to active
-      //set Time according to givenState
+      clearInterval(this.timerId) // Clear the latest Timer
+      this.active = false // Set Start Button to active
+
+      // Set Time according to givenState
       if (givenState == 'focus') {
-        this.time = this.xTime[0] //1500
+        this.time = this.xTime[0] // 1500
         this.currentState = 'Focus'
       } else if (givenState == 'shortBreak') {
-        this.time = this.xTime[1] //300
+        this.time = this.xTime[1] // 300
         this.currentState = 'Take a short Break'
       } else if (givenState == 'longBreak') {
-        this.time = this.xTime[2] //900
+        this.time = this.xTime[2] // 900
         this.currentState = 'Take a long Break'
       }
-      this.timeNumber = this.time //inizialize timeNumber
+      this.timeNumber = this.time // Initialize timeNumber
 
-      //calculate remaining Time
+      // Calculate remaining Time
       this.timeRemainingHours = parseInt(this.timeNumber / 3600)
       this.timeRemainingMinutes = parseInt(this.timeNumber / 60) - this.timeRemainingHours * 60
       this.timeRemainingSeconds =
         this.timeNumber - this.timeRemainingMinutes * 60 - this.timeRemainingHours * 3600
 
-      //initialized time remaining string
+      // Initialize time remaining string
       if (this.timeRemainingHours !== 0) {
         this.timeRemainingString =
           this.formatNumber(this.timeRemainingHours) +
@@ -60,7 +61,8 @@ export default {
           this.formatNumber(this.timeRemainingSeconds)
       }
 
-      this.timerId = setInterval(this.updateTime, 1000) // Start the timer
+      // Start the timer using setInterval
+      this.timerId = setInterval(this.updateTime, 1000)
     },
     updateTime() {
       //count
@@ -85,7 +87,8 @@ export default {
             this.formatNumber(this.timeRemainingSeconds)
         }
       } else {
-        clearInterval(this.timerId) // Stop the timer when remaining reaches 0
+        clearTimeout(this.timerId)
+        // Stop the timer when remaining reaches 0
         this.counter++
         //start next timer
         if (this.counter == 1 || this.counter == 3 || this.counter == 5 || this.counter == 7) {
@@ -152,7 +155,7 @@ export default {
       }
     },
     reset() {
-      clearInterval(this.timerId) //clear latest Timer
+      clearInterval(this.timerId) // Clear the latest Timer
       this.time = 0
       this.timeNumber = 0
       this.timeRemainingSeconds = 0

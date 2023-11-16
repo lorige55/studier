@@ -6,27 +6,38 @@ let timerId
 let timeRemainingHours
 let timeRemainingMinutes
 let timeRemainingSeconds
-let xTime
+let xTime = [1500, 300, 900]
 let currentState
 let time
+let visibilityState = 'hidden'
 
 //receive messages
 self.addEventListener('message', function (e) {
-  timeNumber = e.data.timeNumber
-  counter = e.data.counter
-  timeRemainingString = e.data.timeRemainingString
-  xTime = e.data.xTime
-  currentState = e.data.currentState
-  time = e.data.time
-  timerId = setInterval(updateTime, 1000)
+  let data = e.data
+  if (data.timeNumber !== undefined) {
+    timeNumber = data.timeNumber
+    counter = data.counter
+    timeRemainingString = data.timeRemainingString
+    xTime[0] = data.xTime0
+    xTime[1] = data.xTime1
+    xTime[2] = data.xTime2
+    currentState = data.currentState
+    time = data.time
+    timerId = setInterval(updateTime, 1000)
+  } else {
+    visibilityState = data.visibilityState
+  }
 })
 
 //updateTime
 function updateTime() {
-  if (document.visibilityState == 'hidden') {
+  console.log('worker updated time')
+  console.log(timeNumber)
+  if (visibilityState == 'hidden') {
     if (timeNumber > 0) {
       //count
       timeNumber--
+      console.log(timeNumber)
       timeRemainingHours = parseInt(timeNumber / 3600)
       timeRemainingMinutes = parseInt(timeNumber / 60) - timeRemainingHours * 60
       timeRemainingSeconds = timeNumber - timeRemainingMinutes * 60 - timeRemainingHours * 3600

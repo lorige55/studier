@@ -23,10 +23,10 @@ export default {
     }
   },
   mounted() {
-    timerWorker = new Worker('/src/timer-worker.js')
+    this.timerWorker = new Worker('/src/timerWorker.js')
 
     // Set up an event listener to handle messages from the worker
-    this.timerWorker.addEventListener('message', function (e) {
+    this.timerWorker.addEventListener('message', (e) => {
       this.timeNumber = e.data.timeNumber
       this.counter = e.data.counter
       this.timeRemainingString = e.data.timeRemainingString
@@ -34,6 +34,12 @@ export default {
       this.currentState = e.data.currentState
       this.time = e.data.time
       this.timerId = setInterval(this.updateTime, 1000)
+    })
+
+    //send new visibilty state to worker when change
+    document.addEventListener('visibilitychange', () => {
+      let toSend = [{ visibilityState: document.visibilityState }]
+      this.timerWorker.postMessage(toSend)
     })
   },
   methods: {
@@ -128,13 +134,18 @@ export default {
           }
         }
       } else {
-        clearInterval(this.timerId)
-        timerWorker.postMessage({
+        let toSend = {
           timeNumber: this.timeNumber,
           counter: this.counter,
           timeRemainingString: this.timeRemainingString,
-          xTime: this.xTime
-        })
+          xTime0: this.xTime[0],
+          xTime1: this.xTime[1],
+          xTime2: this.xTime[2],
+          currentState: this.currentState
+        }
+
+        this.timerWorker.postMessage(toSend)
+        clearInterval(this.timerId)
       }
     },
     formatNumber(number) {

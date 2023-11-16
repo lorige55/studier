@@ -18,8 +18,23 @@ export default {
       xTime: [1500, 300, 900],
       key: 0,
       errorMessage: '',
-      todoList: []
+      todoList: [],
+      timerWorker: null
     }
+  },
+  mounted() {
+    timerWorker = new Worker('/src/timer-worker.js')
+
+    // Set up an event listener to handle messages from the worker
+    this.timerWorker.addEventListener('message', function (e) {
+      this.timeNumber = e.data.timeNumber
+      this.counter = e.data.counter
+      this.timeRemainingString = e.data.timeRemainingString
+      this.xTime = e.data.xTime
+      this.currentState = e.data.currentState
+      this.time = e.data.time
+      this.timerId = setInterval(this.updateTime, 1000)
+    })
   },
   methods: {
     startTimer(givenState) {
@@ -65,51 +80,61 @@ export default {
       this.timerId = setInterval(this.updateTime, 1000)
     },
     updateTime() {
-      //count
-      if (this.timeNumber > 0) {
-        this.timeNumber--
-        this.timeRemainingHours = parseInt(this.timeNumber / 3600)
-        this.timeRemainingMinutes = parseInt(this.timeNumber / 60) - this.timeRemainingHours * 60
-        this.timeRemainingSeconds =
-          this.timeNumber - this.timeRemainingMinutes * 60 - this.timeRemainingHours * 3600
+      if (document.visibilityState == 'visible') {
+        if (this.timeNumber > 0) {
+          //count
+          this.timeNumber--
+          this.timeRemainingHours = parseInt(this.timeNumber / 3600)
+          this.timeRemainingMinutes = parseInt(this.timeNumber / 60) - this.timeRemainingHours * 60
+          this.timeRemainingSeconds =
+            this.timeNumber - this.timeRemainingMinutes * 60 - this.timeRemainingHours * 3600
 
-        if (this.timeRemainingHours !== 0) {
-          this.timeRemainingString =
-            this.formatNumber(this.timeRemainingHours) +
-            ':' +
-            this.formatNumber(this.timeRemainingMinutes) +
-            ':' +
-            this.formatNumber(this.timeRemainingSeconds)
+          if (this.timeRemainingHours !== 0) {
+            this.timeRemainingString =
+              this.formatNumber(this.timeRemainingHours) +
+              ':' +
+              this.formatNumber(this.timeRemainingMinutes) +
+              ':' +
+              this.formatNumber(this.timeRemainingSeconds)
+          } else {
+            this.timeRemainingString =
+              this.formatNumber(this.timeRemainingMinutes) +
+              ':' +
+              this.formatNumber(this.timeRemainingSeconds)
+          }
         } else {
-          this.timeRemainingString =
-            this.formatNumber(this.timeRemainingMinutes) +
-            ':' +
-            this.formatNumber(this.timeRemainingSeconds)
+          clearTimeout(this.timerId)
+          // Stop the timer when remaining reaches 0
+          this.counter++
+          //start next timer
+          if (this.counter == 1 || this.counter == 3 || this.counter == 5 || this.counter == 7) {
+            this.startTimer('shortBreak')
+            this.$refs.transitionSound.play()
+          } else if (
+            this.counter == 2 ||
+            this.counter == 4 ||
+            this.counter == 6 ||
+            this.counter == 8
+          ) {
+            this.startTimer('focus')
+            this.$refs.transitionSound.play()
+          } else if (this.counter == 9) {
+            this.startTimer('longBreak')
+            this.$refs.transitionSound.play()
+          } else if (this.counter == 10) {
+            this.counter = 0
+            this.startTimer('focus')
+            this.$refs.transitionSound.play()
+          }
         }
       } else {
-        clearTimeout(this.timerId)
-        // Stop the timer when remaining reaches 0
-        this.counter++
-        //start next timer
-        if (this.counter == 1 || this.counter == 3 || this.counter == 5 || this.counter == 7) {
-          this.startTimer('shortBreak')
-          this.$refs.transitionSound.play()
-        } else if (
-          this.counter == 2 ||
-          this.counter == 4 ||
-          this.counter == 6 ||
-          this.counter == 8
-        ) {
-          this.startTimer('focus')
-          this.$refs.transitionSound.play()
-        } else if (this.counter == 9) {
-          this.startTimer('longBreak')
-          this.$refs.transitionSound.play()
-        } else if (this.counter == 10) {
-          this.counter = 0
-          this.startTimer('focus')
-          this.$refs.transitionSound.play()
-        }
+        clearInterval(this.timerId)
+        timerWorker.postMessage({
+          timeNumber: this.timeNumber,
+          counter: this.counter,
+          timeRemainingString: this.timeRemainingString,
+          xTime: this.xTime
+        })
       }
     },
     formatNumber(number) {

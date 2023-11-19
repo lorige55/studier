@@ -15,7 +15,6 @@ let visibilityState = 'hidden'
 self.addEventListener('message', function (e) {
   let data = e.data
   if (data.timeNumber !== undefined) {
-    console.log('got data from main thread')
     timeNumber = data.timeNumber
     counter = data.counter
     timeRemainingString = data.timeRemainingString
@@ -29,7 +28,6 @@ self.addEventListener('message', function (e) {
     visibilityState = data
     if (visibilityState == 'visible') {
       clearInterval(timerId)
-      console.log(timeNumber)
       let toSend = {
         timeNumber: timeNumber,
         counter: counter,
@@ -38,7 +36,6 @@ self.addEventListener('message', function (e) {
         currentState: currentState,
         time: time
       }
-      console.log(toSend.timeNumber)
       self.postMessage(toSend)
     }
   }
@@ -46,9 +43,9 @@ self.addEventListener('message', function (e) {
 
 //updateTime
 function updateTime() {
+  console.log('worker updates time')
   if (visibilityState == 'hidden') {
     if (timeNumber > 0) {
-      console.log('triggered update time if')
       //count
       timeNumber--
       timeRemainingHours = parseInt(timeNumber / 3600)

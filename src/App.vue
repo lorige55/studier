@@ -34,16 +34,13 @@ export default {
       this.xTime = e.data.xTime
       this.currentState = e.data.currentState
       this.time = e.data.time
-      this.timerId = setInterval(this.updateTime, 1000)
       this.timerWorker.terminate()
-      console.log('switched to main thread')
-      console.log(this.number)
+      this.timerId = setInterval(this.updateTime, 1000)
     })
 
     //send new visibilty state to worker when change
     document.addEventListener('visibilitychange', () => {
       let toSend = document.visibilityState
-      console.log(toSend)
       this.timerWorker.postMessage(toSend)
     })
   },
@@ -91,6 +88,7 @@ export default {
       this.timerId = setInterval(this.updateTime, 1000)
     },
     updateTime() {
+      console.log('main thread updates time')
       if (document.visibilityState == 'visible') {
         if (this.timeNumber > 0) {
           //count
@@ -139,7 +137,7 @@ export default {
           }
         }
       } else if (this.shouldContinue == true) {
-        console.log('triggerd else if')
+        clearInterval(this.timerId)
         let toSend = {
           timeNumber: this.timeNumber,
           counter: this.counter,
@@ -150,7 +148,6 @@ export default {
           currentState: this.currentState
         }
         this.timerWorker.postMessage(toSend)
-        console.log('sent worker command')
         this.shouldContinue = false
       }
     },

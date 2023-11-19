@@ -19,7 +19,8 @@ export default {
       key: 0,
       errorMessage: '',
       todoList: [],
-      timerWorker: null
+      timerWorker: null,
+      shouldContinue: true
     }
   },
   mounted() {
@@ -34,11 +35,15 @@ export default {
       this.currentState = e.data.currentState
       this.time = e.data.time
       this.timerId = setInterval(this.updateTime, 1000)
+      this.timerWorker.terminate()
+      console.log('switched to main thread')
+      console.log(this.number)
     })
 
     //send new visibilty state to worker when change
     document.addEventListener('visibilitychange', () => {
-      let toSend = [{ visibilityState: document.visibilityState }]
+      let toSend = document.visibilityState
+      console.log(toSend)
       this.timerWorker.postMessage(toSend)
     })
   },
@@ -109,7 +114,7 @@ export default {
               this.formatNumber(this.timeRemainingSeconds)
           }
         } else {
-          clearTimeout(this.timerId)
+          clearInterval(this.timerId)
           // Stop the timer when remaining reaches 0
           this.counter++
           //start next timer
@@ -133,7 +138,8 @@ export default {
             this.$refs.transitionSound.play()
           }
         }
-      } else {
+      } else if (this.shouldContinue == true) {
+        console.log('triggerd else if')
         let toSend = {
           timeNumber: this.timeNumber,
           counter: this.counter,
@@ -143,9 +149,9 @@ export default {
           xTime2: this.xTime[2],
           currentState: this.currentState
         }
-
         this.timerWorker.postMessage(toSend)
-        clearInterval(this.timerId)
+        console.log('sent worker command')
+        this.shouldContinue = false
       }
     },
     formatNumber(number) {

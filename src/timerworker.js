@@ -15,6 +15,7 @@ let visibilityState = 'hidden'
 self.addEventListener('message', function (e) {
   let data = e.data
   if (data.timeNumber !== undefined) {
+    console.log('got data from main thread')
     timeNumber = data.timeNumber
     counter = data.counter
     timeRemainingString = data.timeRemainingString
@@ -25,19 +26,31 @@ self.addEventListener('message', function (e) {
     time = data.time
     timerId = setInterval(updateTime, 1000)
   } else {
-    visibilityState = data.visibilityState
+    visibilityState = data
+    if (visibilityState == 'visible') {
+      clearInterval(timerId)
+      console.log(timeNumber)
+      let toSend = {
+        timeNumber: timeNumber,
+        counter: counter,
+        timeRemainingString: timeRemainingString,
+        xTime: xTime,
+        currentState: currentState,
+        time: time
+      }
+      console.log(toSend.timeNumber)
+      self.postMessage(toSend)
+    }
   }
 })
 
 //updateTime
 function updateTime() {
-  console.log('worker updated time')
-  console.log(timeNumber)
   if (visibilityState == 'hidden') {
     if (timeNumber > 0) {
+      console.log('triggered update time if')
       //count
       timeNumber--
-      console.log(timeNumber)
       timeRemainingHours = parseInt(timeNumber / 3600)
       timeRemainingMinutes = parseInt(timeNumber / 60) - timeRemainingHours * 60
       timeRemainingSeconds = timeNumber - timeRemainingMinutes * 60 - timeRemainingHours * 3600
@@ -54,7 +67,7 @@ function updateTime() {
           formatNumber(timeRemainingMinutes) + ':' + formatNumber(timeRemainingSeconds)
       }
     } else {
-      clearTimeout(timerId)
+      clearInterval(timerId)
       // Stop the timer when remaining reaches 0
       counter++
       //start next timer
@@ -73,16 +86,6 @@ function updateTime() {
         //sound should play here
       }
     }
-  } else {
-    clearInterval(timerId)
-    self.postMessage({
-      timeNumber: timeNumber,
-      counter: counter,
-      timeRemainingString: timeRemainingString,
-      xTime: xTime,
-      currentState: currentState,
-      time: time
-    })
   }
 }
 

@@ -6,7 +6,7 @@ export default {
   data() {
     return {
       time: null,
-      timeNumber: null,
+      timeNumber: 0,
       timeRemainingSeconds: null,
       timeRemainingMinutes: null,
       timeRemainingHours: null,
@@ -40,8 +40,10 @@ export default {
 
     //send new visibilty state to worker when change
     document.addEventListener('visibilitychange', () => {
-      let toSend = document.visibilityState
-      this.timerWorker.postMessage(toSend)
+      if (this.timeNumber !== 0) {
+        let toSend = document.visibilityState
+        this.timerWorker.postMessage(toSend)
+      }
     })
   },
   methods: {
@@ -136,7 +138,7 @@ export default {
             this.$refs.transitionSound.play()
           }
         }
-      } else if (this.shouldContinue == true) {
+      } else if (this.shouldContinue == true && this.timeNumber !== 0) {
         clearInterval(this.timerId)
         let toSend = {
           timeNumber: this.timeNumber,

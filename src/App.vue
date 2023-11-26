@@ -34,7 +34,7 @@ export default {
       this.xTime = e.data.xTime
       this.currentState = e.data.currentState
       this.time = e.data.time
-      this.timerWorker.terminate()
+      this.shouldContinue = true
       this.timerId = setInterval(this.updateTime, 1000)
     })
 

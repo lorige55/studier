@@ -90,7 +90,6 @@ export default {
       this.timerId = setInterval(this.updateTime, 1000)
     },
     updateTime() {
-      console.log('main thread updates time')
       if (document.visibilityState == 'visible') {
         if (this.timeNumber > 0) {
           //count
@@ -184,7 +183,6 @@ export default {
         this.errorMessage = 'Really? You think you can trick my Software that easy? Try harder!'
         modalSettings.hide()
         modalError.show()
-        console.error('You cant set a Time below 1 Minute')
       }
     },
     initialize() {

@@ -43,7 +43,6 @@ self.addEventListener('message', function (e) {
 
 //updateTime
 function updateTime() {
-  console.log('worker updates time')
   if (visibilityState == 'hidden') {
     if (timeNumber > 0) {
       //count

@@ -15,6 +15,7 @@ coverage
 *.local
 .prettierrc.cjs
 vite.config.js
+.github/
 
 /cypress/videos/
 /cypress/screenshots/

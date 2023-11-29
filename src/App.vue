@@ -24,7 +24,7 @@ export default {
     }
   },
   mounted() {
-    this.timerWorker = new Worker('/src/timerWorker.js')
+    this.timerWorker = new Worker('../src/timerWorker.js')
 
     // Set up an event listener to handle messages from the worker
     this.timerWorker.addEventListener('message', (e) => {

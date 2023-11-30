@@ -24,7 +24,7 @@ export default {
     }
   },
   mounted() {
-    this.timerWorker = new Worker('./src/timerWorker.js')
+    this.timerWorker = new Worker('./src/timerworker.js')
 
     this.modalSettings = new bootstrap.Modal(document.getElementById('settings'))
     this.modalError = new bootstrap.Modal(document.getElementById('error'))

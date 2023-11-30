@@ -19,7 +19,8 @@ export default {
       timerWorker: null,
       shouldContinue: true,
       modalSettings: null,
-      modalError: null
+      modalError: null,
+      showToDoList: true
     }
   },
   mounted() {
@@ -47,6 +48,9 @@ export default {
         this.timerWorker.postMessage(toSend)
       }
     })
+    if (localStorage.getItem('showToDoList') !== null) {
+      this.showToDoList = localStorage.getItem('showToDoList') === 'true'
+    }
   },
   methods: {
     startTimer(givenState) {
@@ -162,7 +166,7 @@ export default {
         return number
       }
     },
-    setNewTimeValues() {
+    saveSettings() {
       let newTime = [
         document.getElementById('inputFocusTime').value,
         document.getElementById('inputShortBreakTime').value,
@@ -180,6 +184,9 @@ export default {
         this.modalSettings.hide()
         this.modalError.show()
       }
+
+      this.showToDoList = document.getElementById('todolistSwitch').checked
+      localStorage.setItem('showToDoList', this.showToDoList)
     },
     initialize() {
       //use saved values if they exist and are allowed
@@ -266,16 +273,18 @@ export default {
       </button>
     </div>
     <!-- ToDo List -->
-    <div class="card">
-      <div class="card-body">
-        <input value="What do you want to do?" id="taskInput" type="text" />
-        <button type="button" @click="pushNewTask">Set</button>
+    <div :class="{ hide: !showToDoList }">
+      <div class="card">
+        <div class="card-body">
+          <input value="What do you want to do?" id="taskInput" type="text" />
+          <button type="button" @click="pushNewTask">Set</button>
+        </div>
       </div>
-    </div>
 
-    <div class="card" v-for="item in todoList" :key="item">
-      <div class="card-body">
-        {{ item.message }}
+      <div class="card" v-for="item in todoList" :key="item">
+        <div class="card-body">
+          {{ item.message }}
+        </div>
       </div>
     </div>
   </div>
@@ -368,13 +377,22 @@ export default {
               />
               <div id="longBreakTimeHelp" class="form-text">Recommended Time: 15 Minutes</div>
             </div>
+            <label class="form-label">Features</label>
+            <div class="form-check form-switch">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="todolistSwitch"
+                v-model="showToDoList"
+              />
+              <label class="form-check-label" for="todolistSwitch">ToDo List</label>
+            </div>
           </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
-          <button type="button" @click="setNewTimeValues()" class="btn btn-dark">
-            Save changes
-          </button>
+          <button type="button" @click="saveSettings()" class="btn btn-dark">Save changes</button>
         </div>
       </div>
     </div>

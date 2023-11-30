@@ -16,3 +16,7 @@ button {
   background-color: white;
   color: black;
 }
+
+.hide {
+  display: none;
+}

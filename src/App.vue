@@ -1,6 +1,3 @@
-<!-- eslint-disable vue/multi-word-component-names -->
-<!-- eslint-disable no-undef -->
-<!-- eslint-disable vue/multi-word-component-names -->
 <script>
 export default {
   data() {

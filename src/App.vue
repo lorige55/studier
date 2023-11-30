@@ -14,14 +14,19 @@ export default {
       active: true,
       xTime: [1500, 300, 900],
       key: 0,
-      errorMessage: '',
+      errorMessage: 'There has been an unexpected error!',
       todoList: [],
       timerWorker: null,
-      shouldContinue: true
+      shouldContinue: true,
+      modalSettings: null,
+      modalError: null
     }
   },
   mounted() {
     this.timerWorker = new Worker('./src/timerWorker.js')
+
+    this.modalSettings = new bootstrap.Modal(document.getElementById('settings'))
+    this.modalError = new bootstrap.Modal(document.getElementById('error'))
 
     // Set up an event listener to handle messages from the worker
     this.timerWorker.addEventListener('message', (e) => {
@@ -164,30 +169,45 @@ export default {
         document.getElementById('inputLongBreakTime').value
       ]
 
-      let settings = document.getElementById('settings')
-      let modalSettings = bootstrap.Modal.getInstance(settings)
-
       if (newTime[0] >= 1 && newTime[1] >= 1 && newTime[2] >= 1) {
-        this.xTime[0] = newTime[0] * 60
-        this.xTime[1] = newTime[1] * 60
-        this.xTime[2] = newTime[2] * 60
+        this.xTime = [newTime[0] * 60, newTime[1] * 60, newTime[2] * 60]
         localStorage.setItem('xTime0', this.xTime[0])
         localStorage.setItem('xTime1', this.xTime[1])
         localStorage.setItem('xTime2', this.xTime[2])
-        modalSettings.hide()
+        this.modalSettings.hide()
       } else {
-        let modalError = new bootstrap.Modal(document.getElementById('error'))
         this.errorMessage = 'Really? You think you can trick my Software that easy? Try harder!'
-        modalSettings.hide()
-        modalError.show()
+        this.modalSettings.hide()
+        this.modalError.show()
       }
     },
     initialize() {
-      //use saved values if they exist
+      //use saved values if they exist and are allowed
       if (localStorage.getItem('xTime0') !== undefined) {
-        this.xTime[0] = localStorage.getItem('xTime0')
-        this.xTime[1] = localStorage.getItem('xTime1')
-        this.xTime[2] = localStorage.getItem('xTime2')
+        if (localStorage.getItem('xTime0') > 0) {
+          this.xTime[0] = localStorage.getItem('xTime0')
+        } else {
+          localStorage.setItem('xTime0', 1500)
+          this.xTime[0] = 1500
+          this.errorMessage = 'The value saved for Focus Time was invalid! It has been reset!'
+          this.modalError.show()
+        }
+        if (localStorage.getItem('xTime1') > 0) {
+          this.xTime[1] = localStorage.getItem('xTime1')
+        } else {
+          localStorage.setItem('xTime1', 300)
+          this.xTime[1] = 300
+          this.errorMessage = 'The value saved for Short Break Time was invalid! It has been reset!'
+          this.modalError.show()
+        }
+        if (localStorage.getItem('xTime2') > 0) {
+          this.xTime[2] = localStorage.getItem('xTime2')
+        } else {
+          localStorage.setItem('xTime2', 900)
+          this.xTime[2] = 900
+          this.errorMessage = 'The value saved for Long Break Time was invalid! It has been reset!'
+          this.modalError.show()
+        }
       }
     },
     reset() {
@@ -212,7 +232,7 @@ export default {
 }
 </script>
 <template>
-  <title>Studier {{ timeRemainingString }}</title>
+  <title>Studier - {{ timeRemainingString }}</title>
   <div class="position-absolute top-50 start-50 translate-middle">
     <!--Main UI-->
     <div class="text-center container">
@@ -245,35 +265,6 @@ export default {
         Study!
       </button>
     </div>
-
-    <!-- Error Popup -->
-    <div
-      class="modal fade"
-      id="error"
-      tabindex="-1"
-      aria-labelledby="errorLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="errorLabel">Error</h1>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <p>{{ errorMessage }}</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" data-bs-dismiss="modal" class="btn btn-danger">Dismiss</button>
-          </div>
-        </div>
-      </div>
-    </div>
     <!-- ToDo List -->
     <div class="card">
       <div class="card-body">
@@ -285,6 +276,29 @@ export default {
     <div class="card" v-for="item in todoList" :key="item">
       <div class="card-body">
         {{ item.message }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Popup -->
+  <div class="modal fade" id="error" tabindex="-1" aria-labelledby="errorLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="errorLabel">Error</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>{{ errorMessage }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" data-bs-dismiss="modal" class="btn btn-danger">Dismiss</button>
+        </div>
       </div>
     </div>
   </div>

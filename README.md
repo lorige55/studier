@@ -13,3 +13,8 @@ Run the following command to clone this repository:
 ```
 git clone https://github.com/lorige55/studier
 ```
+
+Now navigate into the newly created directory with
+```
+cd studier
+```

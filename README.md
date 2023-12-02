@@ -8,13 +8,32 @@ The easiest way to install npm is to install node.js which you can find the inst
 
 If you've (already) installed them than you're good to proceed to the next step.
 
-### 2. Clone repository
+### 2. Get the code
 Run the following command to clone this repository:
 ```
 git clone https://github.com/lorige55/studier
 ```
 
-Now navigate into the newly created directory with
+Now navigate into the newly created directory with this command:
 ```
 cd studier
 ```
+
+### 3. Final Step
+Since you have NPM installed go ahead and run this command to install the necessary NPM packages:
+```
+npm install
+```
+
+Now the only thing left to do is start the local server:
+```
+npm run dev
+```
+This command starts a server that allows you to host your own local web-server. You can now navigate to the address the previous command gave you and enjoy studier!
+
+### Stay up to date!
+I am constantly updating the code, fixing bugs and adding new features. I really recommend to regularly run the following command to get the latest version of the studier:
+```
+git pull origin Alpha
+```
+Make sure to run this command inside the studier directory!

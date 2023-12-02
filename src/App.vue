@@ -56,7 +56,7 @@ export default {
     startTimer(givenState) {
       this.initialize()
       clearInterval(this.timerId) // Clear the latest Timer
-      this.active = false // Set Start Button to active
+      this.active = false // deactivate Study! button
 
       // Set Time according to givenState
       if (givenState == 'focus') {
@@ -384,7 +384,7 @@ export default {
                 type="checkbox"
                 role="switch"
                 id="todolistSwitch"
-                v-model="showToDoList"
+                v-on:change="showToDoList"
               />
               <label class="form-check-label" for="todolistSwitch">ToDo List</label>
             </div>

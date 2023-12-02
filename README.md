@@ -1,5 +1,7 @@
-# Local Installation
-The studier is still in development and has many bugs. This is why you have to install the latest version manually:
+# Studier
+The studier is still in development and has many bugs. This is why you have to install the latest version manually. I am very thankfull if you could report any bugs or feature requests under the issues tab in this reposetory.
+
+## Installation
 
 ### 1. Install required software
 To be able to host the studier locally on your machine to use it you have to have **git** and **npm** installed.

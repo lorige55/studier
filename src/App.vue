@@ -34,11 +34,11 @@ export default {
       this.timeNumber = e.data.timeNumber
       this.counter = e.data.counter
       this.timeRemainingString = e.data.timeRemainingString
-      this.xTime = e.data.xTime
       this.currentState = e.data.currentState
       this.time = e.data.time
       this.shouldContinue = true
       this.timerId = setInterval(this.updateTime, 1000)
+      this.key++
     })
 
     //send new visibilty state to worker when change

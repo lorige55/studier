@@ -32,7 +32,6 @@ self.addEventListener('message', function (e) {
         timeNumber: timeNumber,
         counter: counter,
         timeRemainingString: timeRemainingString,
-        xTime: xTime,
         currentState: currentState,
         time: time
       }

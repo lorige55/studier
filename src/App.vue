@@ -31,14 +31,18 @@ export default {
 
     // Set up an event listener to handle messages from the worker
     this.timerWorker.addEventListener('message', (e) => {
-      this.timeNumber = e.data.timeNumber
-      this.counter = e.data.counter
-      this.timeRemainingString = e.data.timeRemainingString
-      this.currentState = e.data.currentState
-      this.time = e.data.time
-      this.shouldContinue = true
-      this.timerId = setInterval(this.updateTime, 1000)
-      this.key++
+      if (e.data.timeNumber >= 0) {
+        this.timeNumber = e.data.timeNumber
+        this.counter = e.data.counter
+        this.timeRemainingString = e.data.timeRemainingString
+        this.currentState = e.data.currentState
+        this.time = e.data.time
+        this.shouldContinue = true
+        this.timerId = setInterval(this.updateTime, 1000)
+        this.key++
+      } else {
+        this.timeRemainingString = e.data
+      }
     })
 
     //send new visibilty state to worker when change

@@ -61,6 +61,7 @@ function updateTime() {
         timeRemainingString =
           formatNumber(timeRemainingMinutes) + ':' + formatNumber(timeRemainingSeconds)
       }
+      self.postMessage(timeRemainingString)
     } else {
       clearInterval(timerId)
       // Stop the timer when remaining reaches 0
@@ -119,6 +120,7 @@ function startTimer(givenState) {
       formatNumber(timeRemainingMinutes) + ':' + formatNumber(timeRemainingSeconds)
   }
 
+  self.postMessage(timeRemainingString)
   // Start the timer using setInterval
   timerId = setInterval(updateTime, 1000)
 }

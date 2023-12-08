@@ -26,6 +26,8 @@ export default {
   mounted() {
     this.timerWorker = new Worker('./src/timerworker.js')
 
+    document.title = 'Studier'
+
     this.modalSettings = new bootstrap.Modal(document.getElementById('settings'))
     this.modalError = new bootstrap.Modal(document.getElementById('error'))
 
@@ -50,6 +52,11 @@ export default {
     })
     if (localStorage.getItem('showToDoList') !== null) {
       this.showToDoList = localStorage.getItem('showToDoList') === 'true'
+    }
+  },
+  watch: {
+    timeRemainingString(newVal) {
+      document.title = 'Studier - ' + newVal
     }
   },
   methods: {
@@ -239,7 +246,6 @@ export default {
 }
 </script>
 <template>
-  <title>Studier - {{ timeRemainingString }}</title>
   <div class="position-absolute top-50 start-50 translate-middle">
     <!--Main UI-->
     <div class="text-center container">

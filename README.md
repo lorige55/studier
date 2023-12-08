@@ -1,6 +1,6 @@
 # Studier
 
-The studier is still in development and has many bugs. This is why you have to install the latest version manually. I am very thankfull if you could report any bugs or feature requests under the issues tab in this repository.
+The studier is still in development and has many bugs. This is why you have to install the latest version manually. I am very thankfull if you could report any bugs or feature requests under the issues tab in this repository. Thanks!
 
 ## Installation
 

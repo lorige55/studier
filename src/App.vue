@@ -11,7 +11,7 @@ export default {
       timerId: null,
       currentState: 'Ready!',
       counter: 0,
-      active: true,
+      active: false,
       xTime: [1500, 300, 900],
       key: 0,
       errorMessage: 'There has been an unexpected error!',
@@ -67,7 +67,7 @@ export default {
     startTimer(givenState) {
       this.initialize()
       clearInterval(this.timerId) // Clear the latest Timer
-      this.active = false // deactivate Study! button
+      this.active = true // deactivate Study! button
 
       // Set Time according to givenState
       if (givenState == 'focus') {
@@ -239,12 +239,20 @@ export default {
       this.timerId = null
       this.currentState = 'Ready!'
       this.counter = 0
-      this.active = true
+      this.active = false
       this.key += 1
+      document.title = 'Studier'
     },
     pushNewTask() {
       let newTask = { message: document.getElementById('taskInput').value }
       this.todoList.push(newTask)
+    },
+    startOrStopTimer() {
+      if (this.active) {
+        this.reset()
+      } else {
+        this.startTimer('focus')
+      }
     }
   }
 }
@@ -274,12 +282,12 @@ export default {
       </div>
       <button
         id="startTimer"
-        @click="startTimer('focus')"
+        @click="startOrStopTimer()"
         type="button"
-        class="btn btn-dark"
-        :class="{ disabled: !active }"
+        class="btn"
+        :class="{ 'btn-dark': !active, 'btn-outline-dark': active }"
       >
-        Study!
+        {{ active ? 'Stop Studying' : 'Start Studying' }}
       </button>
     </div>
     <!-- ToDo List -->

@@ -6,12 +6,6 @@ button {
   margin: 15px;
 }
 
-.disabled {
-  background-color: white !important;
-  color: black !important;
-  opacity: 1 !important;
-}
-
 .uiButton:hover {
   background-color: white;
   color: black;

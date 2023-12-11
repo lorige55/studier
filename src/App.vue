@@ -20,7 +20,7 @@ export default {
       shouldContinue: true,
       modalSettings: null,
       modalError: null,
-      showToDoList: true
+      showToDoList: false
     }
   },
   mounted() {

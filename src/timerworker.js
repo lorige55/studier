@@ -22,7 +22,6 @@ self.addEventListener('message', function (e) {
     xTime[1] = data.xTime1
     xTime[2] = data.xTime2
     currentState = data.currentState
-    time = data.time
     timerId = setInterval(updateTime, 1000)
   } else {
     visibilityState = data

@@ -13,7 +13,6 @@ export default {
       counter: 0,
       active: false,
       xTime: [1500, 300, 900],
-      key: 0,
       errorMessage: 'There has been an unexpected error!',
       todoList: [],
       timerWorker: null,
@@ -39,7 +38,6 @@ export default {
         this.counter = e.data.counter
         this.timeRemainingString = e.data.timeRemainingString
         this.currentState = e.data.currentState
-        this.time = e.data.time
         this.shouldContinue = true
         this.timerId = setInterval(this.updateTime, 1000)
       } else {
@@ -158,7 +156,6 @@ export default {
       } else if (this.shouldContinue == true && this.timeNumber !== 0) {
         clearInterval(this.timerId)
         let toSend = {
-          time: this.time,
           timeNumber: this.timeNumber,
           counter: this.counter,
           timeRemainingString: this.timeRemainingString,
@@ -242,7 +239,7 @@ export default {
       this.currentState = 'Ready!'
       this.counter = 0
       this.active = false
-      this.key += 1
+      this.progressbarValue = '0%'
       document.title = 'Studier'
     },
     pushNewTask() {
@@ -265,7 +262,7 @@ export default {
     <div class="text-center container">
       <h4>{{ currentState }}</h4>
       <h1>{{ timeRemainingString }}</h1>
-      <div :key="key">
+      <div>
         <div
           class="progress mx-auto"
           role="progressbar"

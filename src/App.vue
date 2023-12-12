@@ -20,7 +20,8 @@ export default {
       shouldContinue: true,
       modalSettings: null,
       modalError: null,
-      showToDoList: false
+      showToDoList: false,
+      progressbarValue: '0%'
     }
   },
   mounted() {
@@ -41,7 +42,6 @@ export default {
         this.time = e.data.time
         this.shouldContinue = true
         this.timerId = setInterval(this.updateTime, 1000)
-        this.key++
       } else {
         this.timeRemainingString = e.data
       }
@@ -102,7 +102,7 @@ export default {
           ':' +
           this.formatNumber(this.timeRemainingSeconds)
       }
-
+      this.progressbarValue = ((this.time - this.timeNumber) / this.time) * 100 + '%'
       // Start the timer using setInterval
       this.timerId = setInterval(this.updateTime, 1000)
     },
@@ -154,9 +154,11 @@ export default {
             this.$refs.transitionSound.play()
           }
         }
+        this.progressbarValue = ((this.time - this.timeNumber) / this.time) * 100 + '%'
       } else if (this.shouldContinue == true && this.timeNumber !== 0) {
         clearInterval(this.timerId)
         let toSend = {
+          time: this.time,
           timeNumber: this.timeNumber,
           counter: this.counter,
           timeRemainingString: this.timeRemainingString,
@@ -268,14 +270,13 @@ export default {
           class="progress mx-auto"
           role="progressbar"
           aria-label="Timer Progress"
-          :aria-valuenow="time - timeNumber"
           aria-valuemin="0"
           :aria-valuemax="time"
           style="height: 20px; width: 200px"
         >
           <div
             class="progress-bar"
-            :style="{ width: ((time - timeNumber) / time) * 100 + '%' }"
+            :style="{ width: progressbarValue }"
             style="background-color: black"
           ></div>
         </div>
@@ -287,7 +288,7 @@ export default {
         class="btn"
         :class="{ 'btn-dark': !active, 'btn-outline-dark': active }"
       >
-        {{ active ? 'Stop Studying' : 'Start Studying' }}
+        {{ active ? 'Stop Study' : 'Start Study' }}
       </button>
     </div>
     <!-- ToDo List -->

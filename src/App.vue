@@ -37,8 +37,10 @@ export default {
         this.timeNumber = e.data.timeNumber
         this.counter = e.data.counter
         this.timeRemainingString = e.data.timeRemainingString
-        this.currentState = e.data.currentState
         this.shouldContinue = true
+        if (e.data.currentState !== undefined) {
+          this.currentState = e.data.currentState
+        }
         this.timerId = setInterval(this.updateTime, 1000)
       } else {
         this.timeRemainingString = e.data
@@ -58,7 +60,7 @@ export default {
   },
   watch: {
     timeRemainingString(newVal) {
-      document.title = 'Studier - ' + newVal
+      document.title = this.currentState + ' - ' + newVal
     }
   },
   methods: {
@@ -158,11 +160,9 @@ export default {
         let toSend = {
           timeNumber: this.timeNumber,
           counter: this.counter,
-          timeRemainingString: this.timeRemainingString,
           xTime0: this.xTime[0],
           xTime1: this.xTime[1],
-          xTime2: this.xTime[2],
-          currentState: this.currentState
+          xTime2: this.xTime[2]
         }
         this.timerWorker.postMessage(toSend)
         this.shouldContinue = false

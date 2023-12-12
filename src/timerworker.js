@@ -7,9 +7,9 @@ let timeRemainingHours
 let timeRemainingMinutes
 let timeRemainingSeconds
 let xTime = [1500, 300, 900]
-let currentState
 let time
 let visibilityState = 'hidden'
+let currentState
 
 //receive messages
 self.addEventListener('message', function (e) {
@@ -17,11 +17,9 @@ self.addEventListener('message', function (e) {
   if (data.timeNumber !== undefined) {
     timeNumber = data.timeNumber
     counter = data.counter
-    timeRemainingString = data.timeRemainingString
     xTime[0] = data.xTime0
     xTime[1] = data.xTime1
     xTime[2] = data.xTime2
-    currentState = data.currentState
     timerId = setInterval(updateTime, 1000)
   } else {
     visibilityState = data

@@ -252,6 +252,10 @@ export default {
       } else {
         this.startTimer('focus')
       }
+    },
+    checkToDoItem(item) {
+      const index = this.todoList.indexOf(item)
+      this.todoList.splice(index, 1)
     }
   }
 }
@@ -292,14 +296,33 @@ export default {
     <div :class="{ hide: !showToDoList }">
       <div class="card">
         <div class="card-body">
-          <input value="What do you want to do?" id="taskInput" type="text" />
-          <button type="button" @click="pushNewTask">Set</button>
+          <div class="input-group mb-3">
+            <input
+              type="text"
+              class="form-control"
+              placeholder=""
+              aria-label="Example text with button addon"
+              aria-describedby="button-addon1"
+              style="width: 125px"
+            />
+            <button
+              class="btn btn-outline-dark"
+              type="button"
+              id="button-addon2"
+              @click="pushNewTask"
+            >
+              Set
+            </button>
+          </div>
         </div>
       </div>
 
-      <div class="card" v-for="item in todoList" :key="item">
-        <div class="card-body">
+      <div class="card mt-3" v-for="item in todoList">
+        <div class="card-body" style="width: 250px">
           {{ item.message }}
+          <button class="btn btn-outline-success" @click="checkToDoItem(item)">
+            <i class="bi bi-check2"></i>
+          </button>
         </div>
       </div>
     </div>

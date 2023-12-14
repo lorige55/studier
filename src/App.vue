@@ -294,27 +294,16 @@ export default {
     </div>
     <!-- ToDo List -->
     <div :class="{ hide: !showToDoList }">
-      <div class="card">
-        <div class="card-body">
-          <div class="input-group mb-3">
-            <input
-              type="text"
-              class="form-control"
-              placeholder=""
-              aria-label="Example text with button addon"
-              aria-describedby="button-addon1"
-              style="width: 125px"
-            />
-            <button
-              class="btn btn-outline-dark"
-              type="button"
-              id="button-addon2"
-              @click="pushNewTask"
-            >
-              Set
-            </button>
-          </div>
-        </div>
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Enter a Task (Press Enter)"
+          aria-label="Task input"
+          aria-describedby="taskInput"
+          id="taskInput"
+          @keyup.enter="pushNewTask()"
+        />
       </div>
 
       <div class="card mt-3" v-for="item in todoList">
@@ -423,7 +412,7 @@ export default {
                 type="checkbox"
                 role="switch"
                 id="todolistSwitch"
-                v-on:change="showToDoList"
+                v-on:change="showToDoList()"
               />
               <label class="form-check-label" for="todolistSwitch">ToDo List</label>
             </div>

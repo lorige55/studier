@@ -309,7 +309,7 @@ export default {
       <div class="card nb-3 w-100" v-for="item in todoList">
         <div class="card-body">
           {{ item.message }}
-          <button class="btn btn-outline-success" @click="checkToDoItem(item)">
+          <button style="right: 20px" class="btn btn-outline-success" @click="checkToDoItem(item)">
             <i class="bi bi-check2"></i>
           </button>
         </div>

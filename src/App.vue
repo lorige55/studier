@@ -20,7 +20,8 @@ export default {
       modalSettings: null,
       modalError: null,
       showToDoList: false,
-      progressbarValue: '0%'
+      progressbarValue: '0%',
+      taskInputKey: 0
     }
   },
   mounted() {
@@ -245,6 +246,7 @@ export default {
     pushNewTask() {
       let newTask = { message: document.getElementById('taskInput').value }
       this.todoList.push(newTask)
+      this.taskInputKey += 1
     },
     startOrStopTimer() {
       if (this.active) {
@@ -294,7 +296,7 @@ export default {
     </div>
     <!-- ToDo List -->
     <div :class="{ hide: !showToDoList }">
-      <div class="input-group">
+      <div class="input-group" :key="taskInputKey">
         <input
           type="text"
           class="form-control"
@@ -306,8 +308,8 @@ export default {
         />
       </div>
 
-      <div class="card nb-3 w-100" v-for="item in todoList">
-        <div class="card-body">
+      <div class="card" v-for="item in todoList" style="margin: 20px">
+        <div class="card-body" style="padding: 0; padding-left: 15px">
           {{ item.message }}
           <button class="btn btn-outline-success" @click="checkToDoItem(item)">
             <i class="bi bi-check2"></i>

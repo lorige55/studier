@@ -311,7 +311,7 @@ export default {
       <div class="card" v-for="item in todoList" style="margin: 20px">
         <div class="card-body" style="padding: 0; padding-left: 15px">
           {{ item.message }}
-          <button class="btn btn-outline-success" @click="checkToDoItem(item)">
+          <button style="right: 20px" class="btn btn-outline-success" @click="checkToDoItem(item)">
             <i class="bi bi-check2"></i>
           </button>
         </div>

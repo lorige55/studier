@@ -12,6 +12,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+      with:
+        ref: "refs/heads/dev"  # Fetch the dev branch explicitly
 
     - name: Set up Git
       run: |

@@ -46,7 +46,7 @@ This command starts a server that allows you to host your own local web-server. 
 I am constantly updating the code, fixing bugs and adding new features. I really recommend to regularly run the following command to get the latest version of the studier:
 
 ```
-git pull origin Alpha
+git pull origin master
 ```
 
 Make sure to run this command inside the studier directory!

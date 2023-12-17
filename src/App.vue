@@ -414,6 +414,7 @@ export default {
                 type="checkbox"
                 role="switch"
                 id="todolistSwitch"
+                v-model="showToDoList"
                 v-on:change="showToDoList()"
               />
               <label class="form-check-label" for="todolistSwitch">ToDo List</label>

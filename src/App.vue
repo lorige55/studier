@@ -296,7 +296,7 @@ export default {
     </div>
     <!-- ToDo List -->
     <div :class="{ hide: !showToDoList }">
-      <div class="input-group" :key="taskInputKey">
+      <div class="input-group" :key="taskInputKey" style="width: 250px">
         <input
           type="text"
           class="form-control"
@@ -308,10 +308,10 @@ export default {
         />
       </div>
 
-      <div class="card" v-for="item in todoList" style="margin: 20px">
-        <div class="card-body" style="padding: 0; padding-left: 15px">
+      <div class="card" v-for="item in todoList" style="margin-top: 20px; width: 250px">
+        <div class="card-body" style="margin: 0">
           {{ item.message }}
-          <button style="right: 20px" class="btn btn-outline-success" @click="checkToDoItem(item)">
+          <button class="btn btn-outline-success" @click="checkToDoItem(item)">
             <i class="bi bi-check2"></i>
           </button>
         </div>

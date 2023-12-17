@@ -432,4 +432,14 @@ export default {
   <audio ref="transitionSound" style="display: none" controls>
     <source src="/src/assets/transition.mp3" type="audio/mpeg" />
   </audio>
+
+  <!--Footer bzw. GitHub Button-->
+  <a
+    href="https://github.com/lorige55/studier"
+    target="_blank"
+    class="position-absolute bottom-0 end-0 icon-link"
+    style="margin: 10px; color: black"
+  >
+    <i class="bi bi-github"></i>
+  </a>
 </template>

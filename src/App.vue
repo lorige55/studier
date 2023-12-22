@@ -32,6 +32,12 @@ export default {
     this.modalSettings = new bootstrap.Modal(document.getElementById('settings'))
     this.modalError = new bootstrap.Modal(document.getElementById('error'))
 
+    if (localStorage.getItem('todoList') !== null) {
+      this.todoList = JSON.parse(localStorage.getItem('todoList'))
+    }
+    if (localStorage.getItem('showToDoList') !== null) {
+      this.showToDoList = localStorage.getItem('showToDoList') === 'true'
+    }
     // Set up an event listener to handle messages from the worker
     this.timerWorker.addEventListener('message', (e) => {
       if (e.data.timeNumber >= 0) {
@@ -55,9 +61,6 @@ export default {
         this.timerWorker.postMessage(toSend)
       }
     })
-    if (localStorage.getItem('showToDoList') !== null) {
-      this.showToDoList = localStorage.getItem('showToDoList') === 'true'
-    }
   },
   watch: {
     timeRemainingString(newVal) {
@@ -244,9 +247,10 @@ export default {
       document.title = 'Studier'
     },
     pushNewTask() {
-      let newTask = { message: document.getElementById('taskInput').value }
+      let newTask = document.getElementById('taskInput').value
       this.todoList.push(newTask)
       this.taskInputKey += 1
+      localStorage.setItem('todoList', JSON.stringify(this.todoList))
     },
     startOrStopTimer() {
       if (this.active) {
@@ -258,6 +262,7 @@ export default {
     checkToDoItem(item) {
       const index = this.todoList.indexOf(item)
       this.todoList.splice(index, 1)
+      localStorage.setItem('todoList', JSON.stringify(this.todoList))
     }
   }
 }
@@ -310,7 +315,7 @@ export default {
 
       <div class="card" v-for="item in todoList" style="margin-top: 20px; width: 250px">
         <div class="card-body" style="margin: 0">
-          {{ item.message }}
+          {{ item }}
           <button class="btn btn-outline-success" @click="checkToDoItem(item)">
             <i class="bi bi-check2"></i>
           </button>

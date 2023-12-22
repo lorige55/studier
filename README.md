@@ -36,7 +36,7 @@ From now on you can always start your local web server!
 npm run dev
 ```
 
-Make sure to **stay up to date**!
+Make sure to stay up to date, as described at the end of this README!
 
 ### Manual Installation
 

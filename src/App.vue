@@ -248,9 +248,17 @@ export default {
     },
     pushNewTask() {
       let newTask = document.getElementById('taskInput').value
+      if (Array.from(newTask).length > 0 && Array.from(newTask).length < 31){
       this.todoList.push(newTask)
       this.taskInputKey += 1
       localStorage.setItem('todoList', JSON.stringify(this.todoList))
+      } else if (Array.from(newTask).length > 31) {
+        this.errorMessage = 'You exceeded the character limit of 30! Please shorten it!'
+        this.modalError.show()
+      } else if (Array.from(newTask).length == 0) {
+        this.errorMessage = 'You cannot add an empty task!'
+        this.modalError.show()
+      }
     },
     startOrStopTimer() {
       if (this.active) {

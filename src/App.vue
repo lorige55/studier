@@ -248,12 +248,12 @@ export default {
     },
     pushNewTask() {
       let newTask = document.getElementById('taskInput').value
-      if (Array.from(newTask).length > 0 && Array.from(newTask).length < 31){
+      if (Array.from(newTask).length > 0 && Array.from(newTask).length <= 28){
       this.todoList.push(newTask)
       this.taskInputKey += 1
       localStorage.setItem('todoList', JSON.stringify(this.todoList))
-      } else if (Array.from(newTask).length > 31) {
-        this.errorMessage = 'You exceeded the character limit of 30! Please shorten it!'
+      } else if (Array.from(newTask).length >= 28) {
+        this.errorMessage = 'You exceeded the character limit of 28! Please shorten it!'
         this.modalError.show()
       } else if (Array.from(newTask).length == 0) {
         this.errorMessage = 'You cannot add an empty task!'
@@ -322,7 +322,7 @@ export default {
       </div>
 
       <div class="card" v-for="item in todoList" style="margin-top: 20px; width: 250px">
-        <div class="card-body" style="margin: 0">
+        <div class="card-body p-0 d-flex justify-content-between align-items-center" style="margin-left: 15px">
           {{ item }}
           <button class="btn btn-outline-success" @click="checkToDoItem(item)">
             <i class="bi bi-check2"></i>

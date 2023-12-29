@@ -248,10 +248,10 @@ export default {
     },
     pushNewTask() {
       let newTask = document.getElementById('taskInput').value
-      if (Array.from(newTask).length > 0 && Array.from(newTask).length <= 28){
-      this.todoList.push(newTask)
-      this.taskInputKey += 1
-      localStorage.setItem('todoList', JSON.stringify(this.todoList))
+      if (Array.from(newTask).length > 0 && Array.from(newTask).length <= 28) {
+        this.todoList.push(newTask)
+        this.taskInputKey += 1
+        localStorage.setItem('todoList', JSON.stringify(this.todoList))
       } else if (Array.from(newTask).length >= 28) {
         this.errorMessage = 'You exceeded the character limit of 28! Please shorten it!'
         this.modalError.show()
@@ -277,61 +277,81 @@ export default {
 </script>
 <template>
   <div class="position-absolute top-50 start-50 translate-middle">
-    <!--Main UI-->
-    <div class="text-center container">
-      <h4>{{ currentState }}</h4>
-      <h1>{{ timeRemainingString }}</h1>
-      <div>
-        <div
-          class="progress mx-auto"
-          role="progressbar"
-          aria-label="Timer Progress"
-          aria-valuemin="0"
-          :aria-valuemax="time"
-          style="height: 20px; width: 200px"
-        >
-          <div
-            class="progress-bar"
-            :style="{ width: progressbarValue }"
-            style="background-color: black"
-          ></div>
+    <div class="container overflow-hidden text-center">
+      <div class="row g-2">
+        <div class="col" style="height: 250px; width: 500px">
+          <div class="p-3">
+            <!--Main UI-->
+            <div class="text-center container">
+              <h4>{{ currentState }}</h4>
+              <h1>{{ timeRemainingString }}</h1>
+              <div>
+                <div
+                  class="progress mx-auto"
+                  role="progressbar"
+                  aria-label="Timer Progress"
+                  aria-valuemin="0"
+                  :aria-valuemax="time"
+                  style="height: 20px; width: 200px"
+                >
+                  <div
+                    class="progress-bar"
+                    :style="{ width: progressbarValue }"
+                    style="background-color: black"
+                  ></div>
+                </div>
+              </div>
+              <button
+                id="startTimer"
+                @click="startOrStopTimer()"
+                type="button"
+                class="btn"
+                :class="{ 'btn-dark': !active, 'btn-outline-dark': active }"
+              >
+                {{ active ? 'Stop Study' : 'Start Study' }}
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-      <button
-        id="startTimer"
-        @click="startOrStopTimer()"
-        type="button"
-        class="btn"
-        :class="{ 'btn-dark': !active, 'btn-outline-dark': active }"
-      >
-        {{ active ? 'Stop Study' : 'Start Study' }}
-      </button>
-    </div>
-    <!-- ToDo List -->
-    <div :class="{ hide: !showToDoList }">
-      <div class="input-group" :key="taskInputKey" style="width: 250px">
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Enter a Task (Press Enter)"
-          aria-label="Task input"
-          aria-describedby="taskInput"
-          id="taskInput"
-          @keyup.enter="pushNewTask()"
-        />
-      </div>
+        <div class="col" style="height: 250px; width: 500px">
+          <div class="p-3">Comming Soon</div>
+        </div>
+        <div class="col" style="height: 250px; width: 500px">
+          <div class="p-3">
+            <!-- ToDo List -->
+            <div :class="{ hide: !showToDoList }">
+              <div class="input-group" :key="taskInputKey" style="width: 250px">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter a Task (Press Enter)"
+                  aria-label="Task input"
+                  aria-describedby="taskInput"
+                  id="taskInput"
+                  @keyup.enter="pushNewTask()"
+                />
+              </div>
 
-      <div class="card" v-for="item in todoList" style="margin-top: 20px; width: 250px">
-        <div class="card-body p-0 d-flex justify-content-between align-items-center" style="margin-left: 15px">
-          {{ item }}
-          <button class="btn btn-outline-success" @click="checkToDoItem(item)">
-            <i class="bi bi-check2"></i>
-          </button>
+              <div class="card" v-for="item in todoList" style="margin-top: 20px; width: 250px">
+                <div
+                  class="card-body p-0 d-flex justify-content-between align-items-center"
+                  style="margin-left: 15px"
+                >
+                  {{ item }}
+                  <button class="btn btn-outline-success" @click="checkToDoItem(item)">
+                    <i class="bi bi-check2"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col" style="height: 250px; width: 500px">
+          <div class="p-3">Comming Soon</div>
         </div>
       </div>
     </div>
   </div>
-
   <!-- Error Popup -->
   <div class="modal fade" id="error" tabindex="-1" aria-labelledby="errorLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

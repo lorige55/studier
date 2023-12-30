@@ -276,12 +276,16 @@ export default {
 }
 </script>
 <template>
-  <div class="position-absolute top-50 start-50 translate-middle">
+  <div
+    class="position-absolute top-50 start-50 translate-middle w-100"
+    style="padding: 15px; margin: none !important;"
+  >
     <div class="container overflow-hidden text-center">
       <div class="row g-2">
-        <div class="col" style="height: 250px; width: 500px">
-          <div class="p-3">
-            <!--Main UI-->
+        <!-- Column 1 -->
+        <div class="col-md-6 mx-auto" style="height: 250px; margin: 0px;">
+          <div class="d-flex justify-content-center align-items-center h-100">
+            <!-- Main UI -->
             <div class="text-center container">
               <h4>{{ currentState }}</h4>
               <h1>{{ timeRemainingString }}</h1>
@@ -313,14 +317,21 @@ export default {
             </div>
           </div>
         </div>
-        <div class="col" style="height: 250px; width: 500px">
-          <div class="p-3">Comming Soon</div>
+
+        <!-- Column 2 -->
+        <div class="col-md-6 mx-auto" style="height: 250px; margin: 0px;">
+          <div class="d-flex justify-content-center align-items-center h-100">
+            <!-- Coming Soon -->
+            <div class="text-center">Coming Soon</div>
+          </div>
         </div>
-        <div class="col" style="height: 250px; width: 500px">
-          <div class="p-3">
+
+        <!-- Column 3 -->
+        <div class="col-md-6 mx-auto" style="height: 250px; margin: 0px;">
+          <div class="d-flex justify-content-center align-items-center h-100">
             <!-- ToDo List -->
             <div :class="{ hide: !showToDoList }">
-              <div class="input-group" :key="taskInputKey" style="width: 250px">
+              <div class="input-group" :key="taskInputKey" style="width: 200px">
                 <input
                   type="text"
                   class="form-control"
@@ -332,7 +343,7 @@ export default {
                 />
               </div>
 
-              <div class="card" v-for="item in todoList" style="margin-top: 20px; width: 250px">
+              <div class="card" v-for="item in todoList" style="margin-top: 20px; width: 200px">
                 <div
                   class="card-body p-0 d-flex justify-content-between align-items-center"
                   style="margin-left: 15px"
@@ -346,12 +357,18 @@ export default {
             </div>
           </div>
         </div>
-        <div class="col" style="height: 250px; width: 500px">
-          <div class="p-3">Comming Soon</div>
+
+        <!-- Column 4 -->
+        <div class="col-md-6 mx-auto" style="height: 250px; margin: 0px;">
+          <div class="d-flex justify-content-center align-items-center h-100">
+            <!-- Coming Soon -->
+            <div class="text-center">Coming Soon</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
+
   <!-- Error Popup -->
   <div class="modal fade" id="error" tabindex="-1" aria-labelledby="errorLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

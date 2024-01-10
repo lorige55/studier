@@ -66,17 +66,17 @@ function updateTime() {
       //start next timer
       if (counter == 1 || counter == 3 || counter == 5 || counter == 7) {
         startTimer('shortBreak')
-        //sound should play here
+        //TODO: sound should play here
       } else if (counter == 2 || counter == 4 || counter == 6 || counter == 8) {
         startTimer('focus')
-        //sound should play here
+        //TODO: sound should play here
       } else if (counter == 9) {
         startTimer('longBreak')
-        //sound should play here
+        //TODO: sound should play here
       } else if (counter == 10) {
         counter = 0
         startTimer('focus')
-        //sound should play here
+        //TODO: sound should play here
       }
     }
   }

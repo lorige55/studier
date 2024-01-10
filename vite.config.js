@@ -11,5 +11,8 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
+  },
+  compilerOptions: {
+    isCustomElement: (tag) => tag.startsWith('passage-')
   }
 })

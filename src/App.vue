@@ -277,96 +277,90 @@ export default {
 </script>
 <template>
   <div
-    class="position-absolute top-50 start-50 translate-middle w-100"
-    style="padding: 15px; margin: none !important;"
+    id="carousel"
+    class="carousel carousel-dark slide position-absolute top-50 start-50 translate-middle"
+    style="width: 100vh"
   >
-    <div class="container overflow-hidden text-center">
-      <div class="row g-2">
-        <!-- Column 1 -->
-        <div class="col-md-6 mx-auto" style="height: 250px; margin: 0px;">
-          <div class="d-flex justify-content-center align-items-center h-100">
-            <!-- Main UI -->
-            <div class="text-center container">
-              <h4>{{ currentState }}</h4>
-              <h1>{{ timeRemainingString }}</h1>
-              <div>
-                <div
-                  class="progress mx-auto"
-                  role="progressbar"
-                  aria-label="Timer Progress"
-                  aria-valuemin="0"
-                  :aria-valuemax="time"
-                  style="height: 20px; width: 200px"
-                >
-                  <div
-                    class="progress-bar"
-                    :style="{ width: progressbarValue }"
-                    style="background-color: black"
-                  ></div>
-                </div>
-              </div>
-              <button
-                id="startTimer"
-                @click="startOrStopTimer()"
-                type="button"
-                class="btn"
-                :class="{ 'btn-dark': !active, 'btn-outline-dark': active }"
-              >
-                {{ active ? 'Stop Study' : 'Start Study' }}
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <!-- Pomodoro -->
+        <div class="text-center container">
+          <h4>{{ currentState }}</h4>
+          <h1>{{ timeRemainingString }}</h1>
+          <div>
+            <div
+              class="progress mx-auto"
+              role="progressbar"
+              aria-label="Timer Progress"
+              aria-valuemin="0"
+              :aria-valuemax="time"
+              style="height: 20px; width: 200px"
+            >
+              <div
+                class="progress-bar"
+                :style="{ width: progressbarValue }"
+                style="background-color: black"
+              ></div>
+            </div>
+          </div>
+          <button
+            id="startTimer"
+            @click="startOrStopTimer()"
+            type="button"
+            class="btn"
+            :class="{ 'btn-dark': !active, 'btn-outline-dark': active }"
+          >
+            {{ active ? 'Stop Study' : 'Start Study' }}
+          </button>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <!-- ToDo List -->
+        <div :class="{ hide: !showToDoList }">
+          <div class="input-group" :key="taskInputKey" style="width: 200px">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Enter a Task (Press Enter)"
+              aria-label="Task input"
+              aria-describedby="taskInput"
+              id="taskInput"
+              @keyup.enter="pushNewTask()"
+            />
+          </div>
+
+          <div class="card" v-for="item in todoList" style="margin-top: 20px; width: 200px">
+            <div
+              class="card-body p-0 d-flex justify-content-between align-items-center"
+              style="margin-left: 15px"
+            >
+              {{ item }}
+              <button class="btn btn-outline-success" @click="checkToDoItem(item)">
+                <i class="bi bi-check2"></i>
               </button>
             </div>
           </div>
         </div>
-
-        <!-- Column 2 -->
-        <div class="col-md-6 mx-auto" style="height: 250px; margin: 0px;">
-          <div class="d-flex justify-content-center align-items-center h-100">
-            <!-- Coming Soon -->
-            <div class="text-center">Coming Soon</div>
-          </div>
-        </div>
-
-        <!-- Column 3 -->
-        <div class="col-md-6 mx-auto" style="height: 250px; margin: 0px;">
-          <div class="d-flex justify-content-center align-items-center h-100">
-            <!-- ToDo List -->
-            <div :class="{ hide: !showToDoList }">
-              <div class="input-group" :key="taskInputKey" style="width: 200px">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Enter a Task (Press Enter)"
-                  aria-label="Task input"
-                  aria-describedby="taskInput"
-                  id="taskInput"
-                  @keyup.enter="pushNewTask()"
-                />
-              </div>
-
-              <div class="card" v-for="item in todoList" style="margin-top: 20px; width: 200px">
-                <div
-                  class="card-body p-0 d-flex justify-content-between align-items-center"
-                  style="margin-left: 15px"
-                >
-                  {{ item }}
-                  <button class="btn btn-outline-success" @click="checkToDoItem(item)">
-                    <i class="bi bi-check2"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Column 4 -->
-        <div class="col-md-6 mx-auto" style="height: 250px; margin: 0px;">
-          <div class="d-flex justify-content-center align-items-center h-100">
-            <!-- Coming Soon -->
-            <div class="text-center">Coming Soon</div>
-          </div>
-        </div>
       </div>
     </div>
+    <button
+      class="carousel-control-prev"
+      type="button"
+      data-bs-target="#carousel"
+      data-bs-slide="prev"
+    >
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button
+      class="carousel-control-next"
+      type="button"
+      data-bs-target="#carousel"
+      data-bs-slide="next"
+    >
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
   </div>
 
   <!-- Error Popup -->

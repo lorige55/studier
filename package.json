@@ -10,6 +10,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "mongodb": "^6.3.0",
     "vue": "^3.3.4"
   },
   "devDependencies": {

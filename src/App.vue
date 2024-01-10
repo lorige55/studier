@@ -19,7 +19,6 @@ export default {
       shouldContinue: true,
       modalSettings: null,
       modalError: null,
-      showToDoList: false,
       progressbarValue: '0%',
       taskInputKey: 0
     }
@@ -34,9 +33,6 @@ export default {
 
     if (localStorage.getItem('todoList') !== null) {
       this.todoList = JSON.parse(localStorage.getItem('todoList'))
-    }
-    if (localStorage.getItem('showToDoList') !== null) {
-      this.showToDoList = localStorage.getItem('showToDoList') === 'true'
     }
     // Set up an event listener to handle messages from the worker
     this.timerWorker.addEventListener('message', (e) => {
@@ -198,9 +194,6 @@ export default {
         this.modalSettings.hide()
         this.modalError.show()
       }
-
-      this.showToDoList = document.getElementById('todolistSwitch').checked
-      localStorage.setItem('showToDoList', this.showToDoList)
     },
     initialize() {
       //use saved values if they exist and are allowed
@@ -316,7 +309,7 @@ export default {
       </div>
       <div class="carousel-item">
         <!-- ToDo List -->
-        <div :class="{ hide: !showToDoList }">
+        <div class="d-flex justify-content-center align-items-center">
           <div class="input-group" :key="taskInputKey" style="width: 200px">
             <input
               type="text"
@@ -450,18 +443,6 @@ export default {
                 :value="xTime[2] / 60"
               />
               <div id="longBreakTimeHelp" class="form-text">Recommended Time: 15 Minutes</div>
-            </div>
-            <label class="form-label">Features</label>
-            <div class="form-check form-switch">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                role="switch"
-                id="todolistSwitch"
-                v-model="showToDoList"
-                v-on:change="showToDoList()"
-              />
-              <label class="form-check-label" for="todolistSwitch">ToDo List</label>
             </div>
           </form>
         </div>

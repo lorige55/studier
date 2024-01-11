@@ -27,7 +27,6 @@ export default {
   },
   mounted() {
     if (
-      localStorage.getItem('psg_cred_obj') !== null &&
       localStorage.getItem('psg_auth_token') !== null &&
       localStorage.getItem('psg_last_login') !== null
     ) {
@@ -280,7 +279,10 @@ export default {
 </script>
 <template>
   <!--Login-->
-  <div class="authContainer" :class="{ hide: loggedIn }">
+  <div
+    class="authContainer position-absolute top-50 start-50 translate-middle"
+    :class="{ hide: loggedIn }"
+  >
     <passage-auth app-id="QVwa5aHWizo5l5hBczdfCjoi"></passage-auth>
   </div>
   <!--App-->

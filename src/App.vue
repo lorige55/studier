@@ -1,9 +1,7 @@
 <script>
-import '@passageidentity/passage-elements/passage-auth'
 export default {
   data() {
     return {
-      loggedIn: false,
       time: null,
       timeNumber: 0,
       timeRemainingSeconds: null,
@@ -278,219 +276,180 @@ export default {
 }
 </script>
 <template>
-  <!--Login-->
-  <div
-    class="authContainer position-absolute top-50 start-50 translate-middle"
-    :class="{ hide: loggedIn }"
+  <div class="position-absolute top-50 start-50 translate-middle">
+    <!-- Pomodoro -->
+    <div class="text-center container" style="z-index: 1">
+      <h4>{{ currentState }}</h4>
+      <h1>{{ timeRemainingString }}</h1>
+      <div>
+        <div
+          class="progress mx-auto"
+          role="progressbar"
+          aria-label="Timer Progress"
+          aria-valuemin="0"
+          :aria-valuemax="time"
+          style="height: 20px; width: 200px"
+        >
+          <div
+            class="progress-bar"
+            :style="{ width: progressbarValue }"
+            style="background-color: black"
+          ></div>
+        </div>
+      </div>
+      <button
+        id="startTimer"
+        @click="startOrStopTimer()"
+        type="button"
+        class="btn"
+        :class="{ 'btn-dark': !active, 'btn-outline-dark': active }"
+      >
+        {{ active ? 'Stop Study' : 'Start Study' }}
+      </button>
+    </div>
+    <!-- ToDo List -->
+    <div class="hide">
+      <div
+        class="input-group w-25 position-absolute start-50 translate-middle-x"
+        :key="taskInputKey"
+        style="z-index: 3"
+      >
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Enter a Task (Press Enter)"
+          aria-label="Task input"
+          aria-describedby="taskInput"
+          id="taskInput"
+          @keyup.enter="pushNewTask()"
+        />
+      </div>
+
+      <div class="card w-25" v-for="item in todoList" style="margin-top: 20px">
+        <div
+          class="card-body p-0 d-flex justify-content-between align-items-center"
+          style="margin-left: 15px"
+        >
+          {{ item }}
+          <button class="btn btn-outline-success" @click="checkToDoItem(item)">
+            <i class="bi bi-check2"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Popup -->
+  <div class="modal fade" id="error" tabindex="-1" aria-labelledby="errorLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="errorLabel">Error</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <p>{{ errorMessage }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" data-bs-dismiss="modal" class="btn btn-danger">Dismiss</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Button-->
+  <button
+    @click="reset()"
+    type="button"
+    class="btn btn-dark position-absolute top-0 end-0 uiButton"
+    data-bs-toggle="modal"
+    data-bs-target="#settings"
   >
-    <passage-auth app-id="QVwa5aHWizo5l5hBczdfCjoi"></passage-auth>
-  </div>
-  <!--App-->
-  <div :class="{ hide: !loggedIn }">
-    <div
-      id="carousel"
-      class="carousel carousel-dark slide position-absolute top-50 start-50 translate-middle"
-      style="width: 100vh"
-    >
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <!-- Pomodoro -->
-          <div class="text-center container">
-            <h4>{{ currentState }}</h4>
-            <h1>{{ timeRemainingString }}</h1>
-            <div>
-              <div
-                class="progress mx-auto"
-                role="progressbar"
-                aria-label="Timer Progress"
-                aria-valuemin="0"
-                :aria-valuemax="time"
-                style="height: 20px; width: 200px"
-              >
-                <div
-                  class="progress-bar"
-                  :style="{ width: progressbarValue }"
-                  style="background-color: black"
-                ></div>
-              </div>
-            </div>
-            <button
-              id="startTimer"
-              @click="startOrStopTimer()"
-              type="button"
-              class="btn"
-              :class="{ 'btn-dark': !active, 'btn-outline-dark': active }"
-            >
-              {{ active ? 'Stop Study' : 'Start Study' }}
-            </button>
-          </div>
+    <i class="bi bi-gear-fill"></i>
+  </button>
+
+  <!-- Settings Popup -->
+  <div
+    class="modal fade"
+    id="settings"
+    tabindex="-1"
+    aria-labelledby="settingsLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="settingsLabel">Settings</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
         </div>
-        <div class="carousel-item">
-          <!-- ToDo List -->
-          <div class="d-flex justify-content-center align-items-center">
-            <div class="input-group" :key="taskInputKey" style="width: 200px">
+        <div class="modal-body">
+          <p class="">Account</p>
+          <form>
+            <div class="mb-3">
+              <label for="inputFocusTime" class="form-label">Focus Time</label>
               <input
-                type="text"
+                type="number"
                 class="form-control"
-                placeholder="Enter a Task (Press Enter)"
-                aria-label="Task input"
-                aria-describedby="taskInput"
-                id="taskInput"
-                @keyup.enter="pushNewTask()"
+                id="inputFocusTime"
+                aria-describedby="focusTimeHelp"
+                :value="xTime[0] / 60"
               />
+              <div id="focusTimeHelp" class="form-text">Recommended Time: 25 Minutes</div>
             </div>
-
-            <div class="card" v-for="item in todoList" style="margin-top: 20px; width: 200px">
-              <div
-                class="card-body p-0 d-flex justify-content-between align-items-center"
-                style="margin-left: 15px"
-              >
-                {{ item }}
-                <button class="btn btn-outline-success" @click="checkToDoItem(item)">
-                  <i class="bi bi-check2"></i>
-                </button>
-              </div>
+            <div class="mb-3">
+              <label for="inputShortBreakTime" class="form-label">Short Break Time</label>
+              <input
+                type="number"
+                class="form-control"
+                id="inputShortBreakTime"
+                aria-describedby="shortBreakTimeHelp"
+                :value="xTime[1] / 60"
+              />
+              <div id="shortBreakTimeHelp" class="form-text">Recommended Time: 5 Minutes</div>
             </div>
-          </div>
+            <div class="mb-3">
+              <label for="inputLongBreakTime" class="form-label">Long Break Time</label>
+              <input
+                type="number"
+                class="form-control"
+                id="inputLongBreakTime"
+                aria-describedby="inputLongBreakTimeHelp"
+                :value="xTime[2] / 60"
+              />
+              <div id="longBreakTimeHelp" class="form-text">Recommended Time: 15 Minutes</div>
+            </div>
+          </form>
         </div>
-      </div>
-      <button
-        class="carousel-control-prev"
-        type="button"
-        data-bs-target="#carousel"
-        data-bs-slide="prev"
-      >
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-      </button>
-      <button
-        class="carousel-control-next"
-        type="button"
-        data-bs-target="#carousel"
-        data-bs-slide="next"
-      >
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-      </button>
-    </div>
-
-    <!-- Error Popup -->
-    <div
-      class="modal fade"
-      id="error"
-      tabindex="-1"
-      aria-labelledby="errorLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="errorLabel">Error</h1>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <p>{{ errorMessage }}</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" data-bs-dismiss="modal" class="btn btn-danger">Dismiss</button>
-          </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
+          <button type="button" @click="saveSettings()" class="btn btn-dark">Save changes</button>
         </div>
       </div>
     </div>
-
-    <!-- Settings Button-->
-    <button
-      @click="reset()"
-      type="button"
-      class="btn btn-dark position-absolute top-0 end-0 uiButton"
-      data-bs-toggle="modal"
-      data-bs-target="#settings"
-    >
-      <i class="bi bi-gear-fill"></i>
-    </button>
-
-    <!-- Settings Popup -->
-    <div
-      class="modal fade"
-      id="settings"
-      tabindex="-1"
-      aria-labelledby="settingsLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="settingsLabel">Settings</h1>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="mb-3">
-                <label for="inputFocusTime" class="form-label">Focus Time</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  id="inputFocusTime"
-                  aria-describedby="focusTimeHelp"
-                  :value="xTime[0] / 60"
-                />
-                <div id="focusTimeHelp" class="form-text">Recommended Time: 25 Minutes</div>
-              </div>
-              <div class="mb-3">
-                <label for="inputShortBreakTime" class="form-label">Short Break Time</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  id="inputShortBreakTime"
-                  aria-describedby="shortBreakTimeHelp"
-                  :value="xTime[1] / 60"
-                />
-                <div id="shortBreakTimeHelp" class="form-text">Recommended Time: 5 Minutes</div>
-              </div>
-              <div class="mb-3">
-                <label for="inputLongBreakTime" class="form-label">Long Break Time</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  id="inputLongBreakTime"
-                  aria-describedby="inputLongBreakTimeHelp"
-                  :value="xTime[2] / 60"
-                />
-                <div id="longBreakTimeHelp" class="form-text">Recommended Time: 15 Minutes</div>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Dismiss</button>
-            <button type="button" @click="saveSettings()" class="btn btn-dark">Save changes</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!--Audio Player-->
-    <audio ref="transitionSound" style="display: none" controls>
-      <source src="/src/assets/transition.mp3" type="audio/mpeg" />
-    </audio>
-
-    <!--Footer bzw. GitHub Button-->
-    <a
-      href="https://github.com/lorige55/studier"
-      target="_blank"
-      class="position-absolute bottom-0 end-0 icon-link"
-      style="margin: 10px; color: black"
-    >
-      <i class="bi bi-github"></i>
-    </a>
   </div>
+
+  <!--Audio Player-->
+  <audio ref="transitionSound" style="display: none" controls>
+    <source src="/src/assets/transition.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!--Footer bzw. GitHub Button-->
+  <a
+    href="https://github.com/lorige55/studier"
+    target="_blank"
+    class="position-absolute bottom-0 end-0 icon-link"
+    style="margin: 10px; color: black"
+  >
+    <i class="bi bi-github"></i>
+  </a>
 </template>
